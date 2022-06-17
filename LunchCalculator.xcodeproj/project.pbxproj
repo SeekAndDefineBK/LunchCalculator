@@ -14,6 +14,10 @@
 		401F31AD285D165F005C3806 /* LunchCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401F31AC285D165F005C3806 /* LunchCalculatorTests.swift */; };
 		401F31B7285D165F005C3806 /* LunchCalculatorUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401F31B6285D165F005C3806 /* LunchCalculatorUITests.swift */; };
 		401F31B9285D165F005C3806 /* LunchCalculatorUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401F31B8285D165F005C3806 /* LunchCalculatorUITestsLaunchTests.swift */; };
+		401F31C6285D2766005C3806 /* CreateEditFood.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401F31C5285D2766005C3806 /* CreateEditFood.swift */; };
+		401F31C9285D27A2005C3806 /* CreatePeopleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401F31C8285D27A2005C3806 /* CreatePeopleView.swift */; };
+		401F31CB285D27C5005C3806 /* Objects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401F31CA285D27C5005C3806 /* Objects.swift */; };
+		401F31CD285D27E0005C3806 /* ThemeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401F31CC285D27E0005C3806 /* ThemeModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +48,10 @@
 		401F31B2285D165F005C3806 /* LunchCalculatorUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LunchCalculatorUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		401F31B6285D165F005C3806 /* LunchCalculatorUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LunchCalculatorUITests.swift; sourceTree = "<group>"; };
 		401F31B8285D165F005C3806 /* LunchCalculatorUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LunchCalculatorUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		401F31C5285D2766005C3806 /* CreateEditFood.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateEditFood.swift; sourceTree = "<group>"; };
+		401F31C8285D27A2005C3806 /* CreatePeopleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePeopleView.swift; sourceTree = "<group>"; };
+		401F31CA285D27C5005C3806 /* Objects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Objects.swift; sourceTree = "<group>"; };
+		401F31CC285D27E0005C3806 /* ThemeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +104,9 @@
 			children = (
 				401F319B285D165E005C3806 /* LunchCalculatorApp.swift */,
 				401F319D285D165E005C3806 /* ContentView.swift */,
+				401F31CC285D27E0005C3806 /* ThemeModel.swift */,
+				401F31CA285D27C5005C3806 /* Objects.swift */,
+				401F31C7285D278C005C3806 /* Views */,
 				401F319F285D165E005C3806 /* Assets.xcassets */,
 				401F31A1285D165E005C3806 /* Preview Content */,
 			);
@@ -125,6 +136,15 @@
 				401F31B8285D165F005C3806 /* LunchCalculatorUITestsLaunchTests.swift */,
 			);
 			path = LunchCalculatorUITests;
+			sourceTree = "<group>";
+		};
+		401F31C7285D278C005C3806 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				401F31C8285D27A2005C3806 /* CreatePeopleView.swift */,
+				401F31C5285D2766005C3806 /* CreateEditFood.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -258,6 +278,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				401F319E285D165E005C3806 /* ContentView.swift in Sources */,
+				401F31CB285D27C5005C3806 /* Objects.swift in Sources */,
+				401F31C9285D27A2005C3806 /* CreatePeopleView.swift in Sources */,
+				401F31CD285D27E0005C3806 /* ThemeModel.swift in Sources */,
+				401F31C6285D2766005C3806 /* CreateEditFood.swift in Sources */,
 				401F319C285D165E005C3806 /* LunchCalculatorApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
