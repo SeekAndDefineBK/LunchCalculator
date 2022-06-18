@@ -9,9 +9,16 @@ import SwiftUI
 
 @main
 struct LunchCalculatorApp: App {
+    @StateObject var dc: DataController
+    
+    init() {
+        let dataController = DataController()
+        _dc = StateObject(wrappedValue: dataController)
+    }
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(dc: dc)
         }
     }
 }

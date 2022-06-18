@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="20086" systemVersion="21F79" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Food" representedClassName="Food" syncable="YES" codeGenerationType="class">
+        <attribute name="cd_fees" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="cd_name" optional="YES" attributeType="String"/>
+        <attribute name="cd_subtotal" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="cd_tax" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="cd_tip" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <relationship name="person" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Person" inverseName="food" inverseEntity="Person"/>
+        <relationship name="subreceipt" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Subreceipt" inverseName="food" inverseEntity="Subreceipt"/>
+    </entity>
+    <entity name="Person" representedClassName="Person" syncable="YES" codeGenerationType="class">
+        <attribute name="cd_name" optional="YES" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <relationship name="food" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Food" inverseName="person" inverseEntity="Food"/>
+        <relationship name="subreceipt" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Subreceipt" inverseName="person" inverseEntity="Subreceipt"/>
+    </entity>
+    <entity name="Receipt" representedClassName="Receipt" syncable="YES" codeGenerationType="class">
+        <attribute name="cd_address1" optional="YES" attributeType="String"/>
+        <attribute name="cd_address2" optional="YES" attributeType="String"/>
+        <attribute name="cd_city" optional="YES" attributeType="String"/>
+        <attribute name="cd_date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="cd_phone" optional="YES" attributeType="String"/>
+        <attribute name="cd_restaurant" optional="YES" attributeType="String"/>
+        <attribute name="cd_state" optional="YES" attributeType="String"/>
+        <attribute name="cd_website" optional="YES" attributeType="String"/>
+        <attribute name="cd_zip" optional="YES" attributeType="String"/>
+        <relationship name="subreceipts" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Subreceipt" inverseName="receipt" inverseEntity="Subreceipt"/>
+    </entity>
+    <entity name="Subreceipt" representedClassName="Subreceipt" syncable="YES" codeGenerationType="class">
+        <relationship name="food" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Food" inverseName="subreceipt" inverseEntity="Food"/>
+        <relationship name="person" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Person" inverseName="subreceipt" inverseEntity="Person"/>
+        <relationship name="receipt" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Receipt" inverseName="subreceipts" inverseEntity="Receipt"/>
+    </entity>
+    <elements>
+        <element name="Person" positionX="-63" positionY="-18" width="128" height="14"/>
+        <element name="Food" positionX="-54" positionY="-9" width="128" height="14"/>
+        <element name="Subreceipt" positionX="-36" positionY="9" width="128" height="14"/>
+        <element name="Receipt" positionX="-27" positionY="18" width="128" height="179"/>
+    </elements>
+</model>

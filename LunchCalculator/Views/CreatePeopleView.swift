@@ -9,24 +9,25 @@ import SwiftUI
 
 struct CreatePersonView: View {
     @Environment(\.dismiss) var dismiss
+    @StateObject var vm: CreatePersonView_Model
     
-    @Binding var people: [People]
-    @State private var name: String = ""
-    @State private var showingQCAlert = false
-    @State private var alertTitle = ""
-    @State private var alertMessage = ""
+    init(dc: DataController, person: Person? = nil) {
+        let viewModel = CreatePersonView_Model(dc: dc)
+        _vm = StateObject(wrappedValue: viewModel)
+    }
     
     var body: some View {
         Form {
-            TextFieldHStack(rs: "Name", ls: $name)
+            TextFieldHStack(rs: "Name", ls: $vm.name)
             
             Button {
-                createPerson()
+                vm.createPerson()
+                dismiss()
             } label: {
                 Label("Save", systemImage: "person.crop.circle.fill.badge.plus")
             }
         }
-        .alert(alertTitle, isPresented: $showingQCAlert) {
+        .alert(vm.alertTitle, isPresented: $vm.showingQCAlert) {
             Button {
                 //
             } label: {
@@ -34,27 +35,10 @@ struct CreatePersonView: View {
             }
 
         } message: {
-            Text(alertMessage)
+            Text(vm.alertMessage)
         }
         
     }
     
-    func QCInput() -> Bool {
-        if name == "" {
-            alertTitle = "Please Provide a Name"
-            alertMessage = "Creating a person without a name is generally considered cruel and unusual. Please provide a name for this new person. This helps you more than it does me."
-            showingQCAlert = true
-            return false
-        }
-        
-        return true
-    }
-    
-    func createPerson() {
-        if QCInput() {
-            let newPerson = People(name: name, food: [])
-            people.append(newPerson)
-            dismiss()
-        }
-    }
+
 }
