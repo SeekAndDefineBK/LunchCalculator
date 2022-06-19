@@ -16,7 +16,7 @@ struct CreatePersonView: View {
         _vm = StateObject(wrappedValue: viewModel)
     }
     
-    @State private var foodData = [FoodData]()
+    @State private var foodData: [FoodData] = [FoodData]()
     
     var body: some View {
         Form {
@@ -34,7 +34,7 @@ struct CreatePersonView: View {
             
             Section {
                 Button {
-                    foodData.append(FoodData.blank)
+                    foodData.append(FoodData.blank())
                 } label: {
                     Label(foodData.isEmpty ? "Add Food?" : "Add More?", systemImage: "plus.circle")
                 }

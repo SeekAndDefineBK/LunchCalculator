@@ -35,10 +35,15 @@ struct FoodData: Hashable, Identifiable {
     var person: Person?
     var subreceipt: Subreceipt?
     
-    static var blank = FoodData(
-        name: "",
-        subtotal: 0.0
-    )
+    static func blank() -> FoodData {
+        return FoodData(name: "", subtotal: 0.0)
+    }
+    
+//    static var blank = FoodData(
+//        id: UUID(),
+//        name: "",
+//        subtotal: 0.0
+//    )
 }
 
 struct PersonData {

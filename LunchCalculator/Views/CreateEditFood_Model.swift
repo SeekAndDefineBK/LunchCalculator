@@ -33,7 +33,7 @@ extension CreateEditFood {
             
             if food == nil {
                 editMode = false
-                _foodData = Published(wrappedValue: FoodData.blank)
+                _foodData = Published(wrappedValue: FoodData.blank())
                 foodData.person = person
 
             } else {
