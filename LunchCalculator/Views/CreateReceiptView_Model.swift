@@ -8,8 +8,8 @@
 import Foundation
 import CoreData
 
-extension ContentView {
-    class ContentView_Model: NSObject, ObservableObject, NSFetchedResultsControllerDelegate {
+extension CreateReceiptView {
+    class CreateReceiptView_Model: NSObject, ObservableObject, NSFetchedResultsControllerDelegate {
         var dc: DataController
         
         private let PersonController: NSFetchedResultsController<Person>
@@ -47,8 +47,9 @@ extension ContentView {
             do {
                 try PersonController.performFetch()
                 allPeople = PersonController.fetchedObjects ?? []
+                print(allPeople)
             } catch {
-                print("Failed to fetch locations from LocationsView_ViewMOdel init.")
+                print("Failed to fetch locations from ContentView_ViewModel init.")
             }
         }
         

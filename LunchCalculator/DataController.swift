@@ -67,6 +67,25 @@ class DataController: ObservableObject {
         save()
     }
     
+    func combinedCreation(personData: PersonData, foodData: [FoodData], receipt: Receipt?) {
+        let newPerson = createEditPerson(nil, personData: personData)
+        
+        for i in foodData {
+            let newFood = createEditFood(nil, foodData: i)
+            newFood.person = newPerson
+        }
+        
+        if receipt == nil {
+            let newReceipt = createEditReceipt(receipt, receiptData: ReceiptData.blank)
+            
+            for i in newPerson.allFood {
+                createEditSubreceipt(food: i, person: newPerson, receipt: newReceipt)
+            }
+        }
+        
+        save()
+    }
+    
     func createEditReceipt(_ receipt: Receipt?, receiptData: ReceiptData) -> Receipt {
         var output = receipt //this is required because Xcode doesn't want to return from within an if statement
         
@@ -96,25 +115,33 @@ class DataController: ObservableObject {
         return output! //This is expected to be not nil because it will be assigned newReceipt in if statement, or it was never nil in the first place
     }
     
-    func createEditPerson(_ person: Person?, personData: PersonData) {
+    func createEditPerson(_ person: Person?, personData: PersonData) -> Person {
+        var output = person
+        
         if person == nil {
             let newPerson = Person(context: container.viewContext)
             updateData(newPerson)
+            output = newPerson
         } else {
             updateData(person!)
         }
         
         func updateData(_ updateObject: Person) {
+            updateObject.id = UUID()
             updateObject.cd_name = personData.name
+            save()
         }
         
-        save()
+        return output!
     }
     
-    func createEditFood(_ food: Food?, foodData: FoodData) {
+    func createEditFood(_ food: Food?, foodData: FoodData) -> Food {
+        var output = food
+        
         if food == nil {
             let newFood = Food(context: container.viewContext)
             updateData(newFood)
+            output = newFood
         } else {
             updateData(food!)
         }
@@ -122,19 +149,34 @@ class DataController: ObservableObject {
         func updateData(_ updateObject: Food) {
             updateObject.cd_name = foodData.name
             updateObject.cd_subtotal = foodData.subtotal
-            updateObject.cd_tax = foodData.tax
-            updateObject.cd_tip = foodData.tip
-            updateObject.cd_fees = foodData.fees
+            updateObject.id = UUID()
             
             updateObject.person = foodData.person
             
-//            var receipt: Receipt {
-//                foodData.subreceipt?.receipt ?? createEditReceipt(nil, receiptData: ReceiptData.blank)
-//            }
-//
-//            createEditSubreceipt(food: updateObject, person: foodData.person, receipt: receipt)
+            save()
         }
         
+        return output!
+    }
+    
+    func createSingleEditFood(_ food: Food?, foodData: FoodData) {
+        if food == nil {
+            let newFood = Food(context: container.viewContext)
+            updateData(newFood)
+
+        } else {
+            updateData(food!)
+        }
+        
+        func updateData(_ updateObject: Food) {
+            updateObject.cd_name = foodData.name
+            updateObject.cd_subtotal = foodData.subtotal
+            
+            updateObject.id = UUID()
+            
+            updateObject.person = foodData.person
+            
+        }
         save()
     }
     

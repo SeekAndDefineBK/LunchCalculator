@@ -18,7 +18,7 @@ struct LunchCalculatorApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView(dc: dc)
+            HomeContainerView(dc: dc)
         }
     }
 }

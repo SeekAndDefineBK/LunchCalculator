@@ -19,3 +19,16 @@ struct TextFieldHStack: View {
     }
 }
 
+struct DoubleFieldHStack: View {
+    var rs: LocalizedStringKey
+    @Binding var ls: Double
+    
+    var body: some View {
+        HStack {
+            Text(rs)
+            TextField("Price", value: $ls, formatter: NumberFormatter())
+                .keyboardType(.decimalPad)
+        }
+    }
+}
+

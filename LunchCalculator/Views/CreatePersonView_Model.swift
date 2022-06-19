@@ -13,23 +13,27 @@ extension CreatePersonView {
         
         var person: Person?
         
-        @Published var name: String = ""
+        @Published var personData = PersonData.blank
         
         @Published var showingQCAlert = false
         @Published var alertTitle = ""
         @Published var alertMessage = ""
+    
         
         init(dc: DataController, person: Person? = nil) {
             self.dc = dc
             self.person = person
             
             if person != nil {
-                _name = Published(wrappedValue: person!.name)
+                _personData = Published(wrappedValue: PersonData(
+                    name: person!.name,
+                    subreceipt: person!.subreceipt)
+                )
             }
         }
         
         func QCInput() -> Bool {
-            if name == "" {
+            if personData.name == "" {
                 alertTitle = "Please Provide a Name"
                 alertMessage = "Creating a person without a name is generally considered cruel and unusual. Please provide a name for this new person. This helps you more than it does me."
                 showingQCAlert = true
@@ -37,14 +41,6 @@ extension CreatePersonView {
             }
             
             return true
-        }
-        
-        func createPerson() {
-            if QCInput() {
-                let personData = PersonData(name: name)
-                
-                dc.createEditPerson(person, personData: personData)            
-            }
         }
     }
 }

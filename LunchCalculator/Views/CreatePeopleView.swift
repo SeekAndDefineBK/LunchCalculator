@@ -16,16 +16,43 @@ struct CreatePersonView: View {
         _vm = StateObject(wrappedValue: viewModel)
     }
     
+    @State private var foodData = [FoodData]()
+    
     var body: some View {
         Form {
-            TextFieldHStack(rs: "Name", ls: $vm.name)
-            
-            Button {
-                vm.createPerson()
-                dismiss()
-            } label: {
-                Label("Save", systemImage: "person.crop.circle.fill.badge.plus")
+            Section {
+                TextFieldHStack(rs: "Name", ls: $vm.personData.name)
             }
+            
+            ForEach($foodData) { $fdata in
+                Section {
+                    FoodForm(
+                        foodData: $fdata
+                    )
+                }
+            }
+            
+            Section {
+                Button {
+                    foodData.append(FoodData.blank)
+                } label: {
+                    Label(foodData.isEmpty ? "Add Food?" : "Add More?", systemImage: "plus.circle")
+                }
+            }
+            
+            Section {
+                Button {
+                    vm.dc.combinedCreation(
+                        personData: vm.personData,
+                        foodData: foodData,
+                        receipt: vm.personData.subreceipt?.receipt
+                    )
+                    dismiss()
+                } label: {
+                    Label("Save", systemImage: "person.crop.circle.fill.badge.plus")
+                }
+            }
+            
         }
         .alert(vm.alertTitle, isPresented: $vm.showingQCAlert) {
             Button {

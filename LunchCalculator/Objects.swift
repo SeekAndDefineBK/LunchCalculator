@@ -24,23 +24,30 @@ extension Food {
     }
     
     var total: Double {
-        cd_subtotal + cd_tax + cd_tip + cd_fees
+        cd_subtotal
     }
 }
 
-struct FoodData {
+struct FoodData: Hashable, Identifiable {
+    var id = UUID()
     var name: String
     var subtotal: Double
-    var tax: Double
-    var tip: Double
-    var fees: Double
-    var person: Person
+    var person: Person?
     var subreceipt: Subreceipt?
+    
+    static var blank = FoodData(
+        name: "",
+        subtotal: 0.0
+    )
 }
 
 struct PersonData {
     var name: String
     var subreceipt: Subreceipt?
+    
+    static var blank = PersonData(
+        name: ""
+    )
 }
 
 struct ReceiptData {
@@ -54,7 +61,7 @@ struct ReceiptData {
     var website: String
     var date: Date
     
-    static let blank = ReceiptData(
+    static var blank = ReceiptData(
         restaurant: "",
         address1: "",
         address2: "",
