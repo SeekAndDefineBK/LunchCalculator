@@ -222,11 +222,13 @@ class DataController: ObservableObject {
     }
     
     func addPersonToReceipt(_ person: Person, receipt: Receipt) {
-        let newSubreceipt = Subreceipt(context: container.viewContext)
-        
-        newSubreceipt.receipt = receipt
-        newSubreceipt.person = person
-        
-        save()
+        if !receipt.allPeople.contains(person) {
+            let newSubreceipt = Subreceipt(context: container.viewContext)
+            
+            newSubreceipt.receipt = receipt
+            newSubreceipt.person = person
+            
+            save()
+        }
     }
 }

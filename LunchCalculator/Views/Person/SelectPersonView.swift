@@ -14,14 +14,22 @@ struct SelectPersonView: View {
     var restaurant: Restaurant
     
     //TODO: Convert person to array of Person to allow multiple selection
-    @State private var person: Person?
+    @State private var allPeople: [Person]
     @State private var showingAddPerson = false
     @State private var newFoods: [FoodData] = []
+    
+    init(dc: DataController, receipt: Receipt, restaurant: Restaurant) {
+        self.dc = dc
+        self.receipt = receipt
+        self.restaurant = restaurant
+        
+        _allPeople = State(wrappedValue: receipt.allPeople)
+    }
     
     var body: some View {
         Form {
             Section {
-                PeoplePickerView(dc: dc, selectedPerson: $person, receipt: receipt)
+                PeoplePickerView(dc: dc, selectedPeople: $allPeople, receipt: receipt)
             }
             
             //Hide button that tells user they can create a new person
@@ -37,10 +45,7 @@ struct SelectPersonView: View {
                     }
                     
                     Button {
-                        if person != nil {
-                            dc.addPersonToReceipt(person!, receipt: receipt)
-                            dismiss()
-                        }
+                        saveAction()
                     } label: {
                         Label("Save", systemImage: "")
                     }
@@ -56,9 +61,10 @@ struct SelectPersonView: View {
     }
     
     func saveAction() {
-        if person != nil {
-            dc.addPersonToReceipt(person!, receipt: receipt)
+        for person in allPeople {
+            dc.addPersonToReceipt(person, receipt: receipt)
         }
+
         dismiss()
     }
 }
