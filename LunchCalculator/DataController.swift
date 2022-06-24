@@ -39,19 +39,6 @@ class DataController: ObservableObject {
         return managedObjectModel
     }()
     
-//    static var preview: DataController = {
-//        let dataController = DataController(inMemory: true)
-//        let viewContext = dataController.container.viewContext
-//
-//        do {
-//            try dataController.createSampleData()
-//        } catch {
-//            fatalError("Fatal error creating preview: \(error.localizedDescription)")
-//        }
-//
-//        return dataController
-//    }()
-    
     func save() {
         if container.viewContext.hasChanges {
             try? container.viewContext.save()
@@ -78,8 +65,16 @@ class DataController: ObservableObject {
         if receipt == nil {
             let newReceipt = createEditReceipt(receipt, receiptData: ReceiptData.blank)
             
-            for i in newPerson.allFood {
-                createEditSubreceipt(food: i, person: newPerson, receipt: newReceipt)
+            updateReceipt(newReceipt)
+        } else {
+            updateReceipt(receipt!)
+        }
+        
+        func updateReceipt(_ inputReceipt: Receipt) {
+            if foodData.isEmpty {
+                addPersonToReceipt(newPerson, receipt: inputReceipt)
+            } else {
+                createEditSubreceipt(subreceipt: nil, food: newPerson.allFood, person: newPerson, receipt: inputReceipt)
             }
         }
         
@@ -135,9 +130,9 @@ class DataController: ObservableObject {
         return output!
     }
     
-    func createEditFood(_ food: Food?, foodData: FoodData) -> Food {
+    private func createEditFood(_ food: Food?, foodData: FoodData) -> Food {
         var output = food
-        
+
         if food == nil {
             let newFood = Food(context: container.viewContext)
             updateData(newFood)
@@ -145,21 +140,21 @@ class DataController: ObservableObject {
         } else {
             updateData(food!)
         }
-        
+
         func updateData(_ updateObject: Food) {
             updateObject.cd_name = foodData.name
             updateObject.cd_subtotal = foodData.subtotal
             updateObject.id = UUID()
-            
+
             updateObject.person = foodData.person
-            
+
             save()
         }
-        
+
         return output!
     }
     
-    func createSingleEditFood(_ food: Food?, foodData: FoodData) {
+    func createEditSingleFood(_ food: Food?, foodData: FoodData, subreceipt: Subreceipt) {
         if food == nil {
             let newFood = Food(context: container.viewContext)
             updateData(newFood)
@@ -175,24 +170,38 @@ class DataController: ObservableObject {
             updateObject.id = UUID()
             
             updateObject.person = foodData.person
-            
+            updateObject.subreceipt = subreceipt
         }
         save()
     }
     
-    private func createEditSubreceipt(food: Food, person: Person, receipt: Receipt) {
-        if food.subreceipt == nil {
+    private func createEditSubreceipt(subreceipt: Subreceipt?, food: [Food], person: Person, receipt: Receipt) {
+        if subreceipt == nil {
             let newSubreceipt = Subreceipt(context: container.viewContext)
             updateData(newSubreceipt)
         } else {
-            updateData(food.subreceipt!)
+            updateData(subreceipt!)
         }
         
         func updateData(_ updateObject: Subreceipt) {
             updateObject.person = person
             updateObject.receipt = receipt
-            //Is this necessary?
-            food.subreceipt = updateObject
+            for i in food {
+                i.subreceipt = updateObject
+            }
+        }
+        
+        save()
+    }
+    
+    func addPersonToReceipt(_ person: Person, receipt: Receipt) {
+        let newSubreceipt = Subreceipt(context: container.viewContext)
+        
+        newSubreceipt.receipt = receipt
+        newSubreceipt.person = person
+        
+        for food in person.allFood {
+            food.subreceipt = newSubreceipt
         }
         
         save()

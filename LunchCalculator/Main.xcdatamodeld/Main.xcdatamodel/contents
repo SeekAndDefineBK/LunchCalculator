@@ -11,7 +11,7 @@
         <attribute name="cd_name" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <relationship name="food" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Food" inverseName="person" inverseEntity="Food"/>
-        <relationship name="subreceipt" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Subreceipt" inverseName="person" inverseEntity="Subreceipt"/>
+        <relationship name="subreceipts" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Subreceipt" inverseName="person" inverseEntity="Subreceipt"/>
     </entity>
     <entity name="Receipt" representedClassName="Receipt" syncable="YES" codeGenerationType="class">
         <attribute name="cd_address1" optional="YES" attributeType="String"/>
@@ -30,12 +30,12 @@
     </entity>
     <entity name="Subreceipt" representedClassName="Subreceipt" syncable="YES" codeGenerationType="class">
         <relationship name="food" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Food" inverseName="subreceipt" inverseEntity="Food"/>
-        <relationship name="person" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Person" inverseName="subreceipt" inverseEntity="Person"/>
+        <relationship name="person" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Person" inverseName="subreceipts" inverseEntity="Person"/>
         <relationship name="receipt" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Receipt" inverseName="subreceipts" inverseEntity="Receipt"/>
     </entity>
     <elements>
         <element name="Food" positionX="-54" positionY="-9" width="128" height="104"/>
-        <element name="Person" positionX="-63" positionY="-18" width="128" height="14"/>
+        <element name="Person" positionX="-63" positionY="-18" width="128" height="89"/>
         <element name="Receipt" positionX="-27" positionY="18" width="128" height="224"/>
         <element name="Subreceipt" positionX="-36" positionY="9" width="128" height="14"/>
     </elements>

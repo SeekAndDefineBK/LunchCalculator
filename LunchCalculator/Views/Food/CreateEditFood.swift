@@ -16,8 +16,8 @@ struct CreateEditFood: View {
     ///   - dc: DataController from the environment
     ///   - person: Person who will be assigned or is currently assigned to the food
     ///   - food: Optional value of Food. If NIL, new food will be created. If Not-NIL, food will be edited
-    init(dc: DataController, person: Person, food: Food? = nil) {
-        let viewModel = CreateEditFood_Model(dc: dc, person: person, food: food)
+    init(dc: DataController, person: Person, food: Food? = nil, subreceipt: Subreceipt) {
+        let viewModel = CreateEditFood_Model(dc: dc, person: person, food: food, subreceipt: subreceipt)
         _vm = StateObject(wrappedValue: viewModel)
     }
 
@@ -33,7 +33,6 @@ struct CreateEditFood: View {
                 vm.createFood {
                     dismiss()
                 }
-                
             } label: {
                 Label("Save Food", systemImage: "plus.circle")
             }
@@ -112,7 +111,6 @@ struct FoodForm: View {
         Section {
             TextFieldHStack(rs: "Food name", ls: $foodData.name)
             DoubleFieldHStack(rs: "Menu Price", ls: $foodData.subtotal)
-            
         }
     }
 }

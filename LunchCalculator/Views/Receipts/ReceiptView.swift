@@ -7,33 +7,39 @@
 
 import SwiftUI
 
-struct CreateReceiptView: View {
-    @StateObject var vm: CreateReceiptView_Model
+struct ReceiptView: View {
+    @Environment(\.dismiss) var dismiss
+    @StateObject var vm: ReceiptView_Model
     static let tag = "NewReceipt"
+    @State private var selectedSubreceipt: Subreceipt?
     
-    init(dc: DataController) {
-        let viewModel = CreateReceiptView_Model(dc: dc)
+    init(dc: DataController, receipt: Receipt) {
+        let viewModel = ReceiptView_Model(
+            dc: dc,
+            receipt: receipt
+        )
+        
         _vm = StateObject(wrappedValue: viewModel)
     }
     
     var body: some View {
         NavigationView {
             List {
-                ForEach(vm.allPeople) { person in
+                ForEach(vm.receipt.allSubreceipts) { subreceipt in
                     Section {
                         HStack {
-                            Text(person.name)
+                            Text(subreceipt.person!.name)
                                 .font(.title)
                                 .bold()
                             Spacer()
-                            Text("Total Due: \(person.allFood.reduce(0) { $0 + $1.total }, specifier: "%.2f")")
+                            Text("Total Due: \(subreceipt.totalDue, specifier: "%.2f")")
                                 .bold()
                         }
-
-                        ForEach(person.allFood) { food in
+                        
+                        ForEach(subreceipt.allFood) { food in
                             
                             NavigationLink {
-                                CreateEditFood(dc: vm.dc, person: person, food: food)
+                                CreateEditFood(dc: vm.dc, person: subreceipt.person!, food: food, subreceipt: subreceipt)
                             } label: {
                                 VStack(alignment: .leading) {
                                     Text("Item: \(food.name)")
@@ -51,10 +57,11 @@ struct CreateReceiptView: View {
                                 .font(.subheadline)
                             }
                         }
-
+                        
                         Button {
-                            if let index = vm.allPeople.firstIndex(where: {$0.id == person.id}) {
+                            if let index = vm.receipt.allPeople.firstIndex(where: {$0.id == subreceipt.person!.id}) {
                                 vm.selectedPersonIndex = index
+                                selectedSubreceipt = subreceipt
                                 vm.showingAddFood = true
                             }
                         } label: {
@@ -68,18 +75,39 @@ struct CreateReceiptView: View {
                 } label: {
                     Label("Add Person", systemImage: "person.crop.circle.fill.badge.plus")
                 }
+                
+                Button {
+                    vm.askToDelete()
+                } label: {
+                    Label("Delete Receipt", systemImage: "x.square.fill")
+                }
+                .foregroundColor(.red)
+
             }
             .navigationTitle("Lunch Calculator")
         }
         .sheet(isPresented: $vm.showingAddPerson) {
-            CreatePersonView(dc: vm.dc)
+            SelectPersonView(dc: vm.dc, receipt: vm.receipt)
         }
         .sheet(isPresented: $vm.showingAddFood) {
             CreateEditFood(
                 dc: vm.dc,
-                person: vm.allPeople[vm.selectedPersonIndex]
+                person: vm.receipt.allPeople[vm.selectedPersonIndex], subreceipt: selectedSubreceipt!
             )
         }
+        .alert(vm.alertTitle, isPresented: $vm.showingDeleteAlert) {
+            
+            Button(role: .destructive) {
+                vm.dc.delete(vm.receipt)
+                dismiss()
+            } label: {
+                Text("Yes, Delete")
+            }
+
+        } message: {
+            Text(vm.alertMessage)
+        }
+
     }
 }
 

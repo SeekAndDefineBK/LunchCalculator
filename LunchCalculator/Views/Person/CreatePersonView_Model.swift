@@ -12,6 +12,7 @@ extension CreatePersonView {
         var dc: DataController
         
         var person: Person?
+        let onSaveAction: () -> Void
         
         @Published var personData = PersonData.blank
         
@@ -19,15 +20,15 @@ extension CreatePersonView {
         @Published var alertTitle = ""
         @Published var alertMessage = ""
     
-        
-        init(dc: DataController, person: Person? = nil) {
+        init(dc: DataController, person: Person? = nil, onSaveAction: @escaping () -> Void) {
             self.dc = dc
             self.person = person
+            self.onSaveAction = onSaveAction
             
             if person != nil {
                 _personData = Published(wrappedValue: PersonData(
                     name: person!.name,
-                    subreceipt: person!.subreceipt)
+                    subreceipt: person!.allSubreceipts)
                 )
             }
         }

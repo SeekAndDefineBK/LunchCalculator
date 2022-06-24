@@ -1,26 +1,20 @@
 //
-//  ContentView_Model.swift
+//  PeoplePickerView_Model.swift
 //  LunchCalculator
 //
-//  Created by Brett Koster on 6/18/22.
+//  Created by Brett Koster on 6/23/22.
 //
 
 import Foundation
 import CoreData
 
-extension CreateReceiptView {
-    class CreateReceiptView_Model: NSObject, ObservableObject, NSFetchedResultsControllerDelegate {
+extension PeoplePickerView {
+    class PeoplePickerView_Model: NSObject, ObservableObject, NSFetchedResultsControllerDelegate  {
+        
         var dc: DataController
         
-        private let PersonController: NSFetchedResultsController<Person>
+        private let PeopleController: NSFetchedResultsController<Person>
         @Published var allPeople = [Person]()
-        
-        @Published var showingAddPerson = false
-        @Published var showingAddFood = false
-
-        @Published var selectedPersonIndex: Int = 0
-        @Published var selectedFoodIndex: Int = 0
-        @Published var showEditFood = false
 
         init(dc: DataController) {
             self.dc = dc
@@ -34,7 +28,7 @@ extension CreateReceiptView {
             request.sortDescriptors = [NSSortDescriptor(keyPath: \Person.cd_name, ascending: true)]
             request.predicate = predicate
             
-            PersonController = NSFetchedResultsController(
+            PeopleController = NSFetchedResultsController(
                 fetchRequest: request,
                 managedObjectContext: dc.container.viewContext,
                 sectionNameKeyPath: nil,
@@ -42,12 +36,11 @@ extension CreateReceiptView {
             )
             
             super.init()
-            PersonController.delegate = self
+            PeopleController.delegate = self
             
             do {
-                try PersonController.performFetch()
-                allPeople = PersonController.fetchedObjects ?? []
-                print(allPeople)
+                try PeopleController.performFetch()
+                allPeople = PeopleController.fetchedObjects ?? []
             } catch {
                 print("Failed to fetch locations from ContentView_ViewModel init.")
             }

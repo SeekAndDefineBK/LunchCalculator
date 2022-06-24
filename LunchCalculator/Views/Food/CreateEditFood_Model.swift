@@ -15,6 +15,7 @@ extension CreateEditFood {
         var person: Person
         let editMode: Bool
         var food: Food?
+        var subreceipt: Subreceipt
         
         @Published var foodData: FoodData
         
@@ -27,9 +28,10 @@ extension CreateEditFood {
         @Published var alertMessage = ""
         @Published var alertAction: () = ()
         
-        init(dc: DataController, person: Person, food: Food?) {
+        init(dc: DataController, person: Person, food: Food?, subreceipt: Subreceipt) {
             self.dc = dc
             self.person = person
+            self.subreceipt = subreceipt
             
             if food == nil {
                 editMode = false
@@ -69,7 +71,7 @@ extension CreateEditFood {
         
         func createFood(action: () -> Void) {
             if QCInput() {
-                dc.createSingleEditFood(food, foodData: foodData)
+                dc.createEditSingleFood(food, foodData: foodData, subreceipt: subreceipt)
                 action()
             }
         }

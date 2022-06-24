@@ -6,10 +6,34 @@
 //
 
 import Foundation
+import SwiftUI
+
+extension Receipt {
+    var allPeople: [Person] {
+        var output = [Person]()
+        
+        for i in allSubreceipts {
+            if i.person != nil {
+                output.append(i.person!) //this should always be populated
+            }
+        }
+        
+        return output
+    }
+    
+    var allSubreceipts: [Subreceipt] {
+        let arr = subreceipts?.allObjects as? [Subreceipt] ?? []
+        return arr
+    }
+}
 
 extension Person {
     var name: String {
         cd_name ?? "Unknown Name"
+    }
+    
+    var allSubreceipts: [Subreceipt] {
+        return subreceipts?.allObjects as? [Subreceipt] ?? []
     }
     
     var allFood: [Food] {
@@ -25,6 +49,17 @@ extension Food {
     
     var total: Double {
         cd_subtotal
+    }
+}
+
+extension Subreceipt {
+    var allFood: [Food] {
+        let arr = food?.allObjects as? [Food] ?? []
+        return arr.sorted(by: {$0.name < $1.name})
+    }
+    
+    var totalDue: Double {
+        return allFood.reduce(0) { $0 + $1.total}
     }
 }
 
@@ -48,7 +83,7 @@ struct FoodData: Hashable, Identifiable {
 
 struct PersonData {
     var name: String
-    var subreceipt: Subreceipt?
+    var subreceipt: [Subreceipt]?
     
     static var blank = PersonData(
         name: ""

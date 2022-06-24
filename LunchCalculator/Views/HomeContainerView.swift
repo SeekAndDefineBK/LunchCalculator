@@ -18,18 +18,23 @@ struct HomeContainerView: View {
     
     var body: some View {
         TabView {
-            CreateReceiptView(dc: vm.dc)
-                .tag(CreateReceiptView.tag)
-                .tabItem {
-                    Label("New", systemImage: "sparkles")
-                }
-            
-            Text("History")
-                .tag("2")
+            HistoryView(dc: vm.dc)
+                .tag(HistoryView.tag)
                 .tabItem {
                     Label("History", systemImage: "newspaper")
                 }
             
+            AllPeopleView(dc: vm.dc)
+                .tag(AllPeopleView.tag)
+                .tabItem {
+                    Label("People", systemImage: "person.3.fill")
+                }
+            
+            AllFoodView(dc: vm.dc)
+                .tag(AllFoodView.tag)
+                .tabItem {
+                    Label("Food", systemImage: "leaf")
+                }
             
             Text("Settings")
                 .tag("3")
