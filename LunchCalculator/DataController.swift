@@ -54,7 +54,7 @@ class DataController: ObservableObject {
         save()
     }
     
-    func combinedCreation(personData: PersonData, foodData: [FoodData], receipt: Receipt?) {
+    func combinedCreation(personData: PersonData, foodData: [FoodData], receipt: Receipt?, restaurant: Restaurant) {
         let newPerson = createEditPerson(nil, personData: personData)
         
         for i in foodData {
@@ -63,7 +63,9 @@ class DataController: ObservableObject {
         }
         
         if receipt == nil {
-            let newReceipt = createEditReceipt(receipt, receiptData: ReceiptData.blank)
+            let receiptData = ReceiptData(restaurant: restaurant, date: Date(), fees: 0, tax: 0, tip: 0)
+            
+            let newReceipt = createEditReceipt(receipt, receiptData: receiptData, restaurant: restaurant)
             
             updateReceipt(newReceipt)
         } else {
@@ -81,7 +83,35 @@ class DataController: ObservableObject {
         save()
     }
     
-    func createEditReceipt(_ receipt: Receipt?, receiptData: ReceiptData) -> Receipt {
+    func createEditRestaurant(_ restaurant: Restaurant?, restaurantData: RestaurantData) -> Restaurant {
+        var output = restaurant
+        
+        if restaurant == nil {
+            let newRestaurant = Restaurant(context: container.viewContext)
+            updateData(newRestaurant)
+            output = newRestaurant
+        } else {
+            updateData(restaurant!)
+            output = restaurant
+        }
+        
+        func updateData(_ updateObject: Restaurant) {
+            updateObject.cd_name = restaurantData.name
+            updateObject.cd_address1 = restaurantData.address1
+            updateObject.cd_address2 = restaurantData.address2
+            updateObject.cd_city = restaurantData.city
+            updateObject.cd_state = restaurantData.state
+            updateObject.cd_zip = restaurantData.zip
+            updateObject.cd_phone = restaurantData.phone
+            updateObject.cd_website = restaurantData.website
+            
+            save()
+        }
+        
+        return output!
+    }
+    
+    func createEditReceipt(_ receipt: Receipt?, receiptData: ReceiptData, restaurant: Restaurant) -> Receipt {
         var output = receipt //this is required because Xcode doesn't want to return from within an if statement
         
         if receipt == nil {
@@ -93,15 +123,12 @@ class DataController: ObservableObject {
         }
 
         func updateData(_ updateObject: Receipt) {
-            updateObject.cd_address1 = receiptData.address1
-            updateObject.cd_address2 = receiptData.address2
-            updateObject.cd_city = receiptData.city
-            updateObject.cd_state = receiptData.state
-            updateObject.cd_zip = receiptData.zip
-            updateObject.cd_phone = receiptData.phone
-            updateObject.cd_website = receiptData.website
             updateObject.cd_date = receiptData.date
-            updateObject.cd_restaurant = receiptData.restaurant
+            updateObject.cd_fees = receiptData.fees
+            updateObject.cd_tax = receiptData.tax
+            updateObject.cd_tip = receiptData.tip
+            
+            updateObject.restaurant = restaurant
 
             //Save needs to occur here to guarantee the return value is updated
             save()
@@ -199,10 +226,6 @@ class DataController: ObservableObject {
         
         newSubreceipt.receipt = receipt
         newSubreceipt.person = person
-        
-        for food in person.allFood {
-            food.subreceipt = newSubreceipt
-        }
         
         save()
     }

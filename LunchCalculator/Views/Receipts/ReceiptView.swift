@@ -13,81 +13,80 @@ struct ReceiptView: View {
     static let tag = "NewReceipt"
     @State private var selectedSubreceipt: Subreceipt?
     
-    init(dc: DataController, receipt: Receipt) {
+    init(dc: DataController, receipt: Receipt, restaurant: Restaurant) {
         let viewModel = ReceiptView_Model(
             dc: dc,
-            receipt: receipt
+            receipt: receipt,
+            restaurant: restaurant
         )
         
         _vm = StateObject(wrappedValue: viewModel)
     }
     
     var body: some View {
-        NavigationView {
-            List {
-                ForEach(vm.receipt.allSubreceipts) { subreceipt in
-                    Section {
-                        HStack {
-                            Text(subreceipt.person!.name)
-                                .font(.title)
-                                .bold()
-                            Spacer()
-                            Text("Total Due: \(subreceipt.totalDue, specifier: "%.2f")")
-                                .bold()
-                        }
+        List {
+            ForEach(vm.receipt.allSubreceipts) { subreceipt in
+                Section {
+                    HStack {
+                        Text(subreceipt.person!.name)
+                            .font(.title)
+                            .bold()
+                        Spacer()
+                        Text("Total Due: \(subreceipt.totalDue, specifier: "%.2f")")
+                            .bold()
+                    }
+                    
+                    ForEach(subreceipt.allFood) { food in
                         
-                        ForEach(subreceipt.allFood) { food in
-                            
-                            NavigationLink {
-                                CreateEditFood(dc: vm.dc, person: subreceipt.person!, food: food, subreceipt: subreceipt)
-                            } label: {
-                                VStack(alignment: .leading) {
-                                    Text("Item: \(food.name)")
-                                        .font(.title3)
-
-                                    VStack(alignment: .leading) {
-                                        Text("Menu Price: $\(food.cd_subtotal, specifier: "%.2f")")
-                                        Text("Subtotal: \(food.total, specifier: "%.2f")")
-                                            .italic()
-                                            .bold()
-                                    }
-                                    .padding(.leading, 10)
-                                    
-                                }
-                                .font(.subheadline)
-                            }
-                        }
-                        
-                        Button {
-                            if let index = vm.receipt.allPeople.firstIndex(where: {$0.id == subreceipt.person!.id}) {
-                                vm.selectedPersonIndex = index
-                                selectedSubreceipt = subreceipt
-                                vm.showingAddFood = true
-                            }
+                        NavigationLink {
+                            CreateEditFood(dc: vm.dc, person: subreceipt.person!, food: food, subreceipt: subreceipt)
                         } label: {
-                            Label("Add Food", systemImage: "plus.circle")
+                            VStack(alignment: .leading) {
+                                Text("Item: \(food.name)")
+                                    .font(.title3)
+
+                                VStack(alignment: .leading) {
+                                    Text("Menu Price: $\(food.cd_subtotal, specifier: "%.2f")")
+                                    Text("Subtotal: \(food.total, specifier: "%.2f")")
+                                        .italic()
+                                        .bold()
+                                }
+                                .padding(.leading, 10)
+                                
+                            }
+                            .font(.subheadline)
                         }
                     }
+                    
+                    Button {
+                        if let index = vm.receipt.allPeople.firstIndex(where: {$0.id == subreceipt.person!.id}) {
+                            vm.selectedPersonIndex = index
+                            selectedSubreceipt = subreceipt
+                            vm.showingAddFood = true
+                        }
+                    } label: {
+                        Label("Add Food", systemImage: "plus.circle")
+                    }
                 }
-                
-                Button {
-                    vm.showingAddPerson = true
-                } label: {
-                    Label("Add Person", systemImage: "person.crop.circle.fill.badge.plus")
-                }
-                
-                Button {
-                    vm.askToDelete()
-                } label: {
-                    Label("Delete Receipt", systemImage: "x.square.fill")
-                }
-                .foregroundColor(.red)
-
             }
-            .navigationTitle("Lunch Calculator")
+            
+            Button {
+                vm.showingAddPerson = true
+                
+            } label: {
+                Label("Add Person", systemImage: "person.crop.circle.fill.badge.plus")
+            }
+            
+            Button {
+                vm.askToDelete()
+            } label: {
+                Label("Delete Receipt", systemImage: "x.square.fill")
+            }
+            .foregroundColor(.red)
+
         }
         .sheet(isPresented: $vm.showingAddPerson) {
-            SelectPersonView(dc: vm.dc, receipt: vm.receipt)
+            SelectPersonView(dc: vm.dc, receipt: vm.receipt, restaurant: vm.restaurant)
         }
         .sheet(isPresented: $vm.showingAddFood) {
             CreateEditFood(
@@ -106,6 +105,16 @@ struct ReceiptView: View {
 
         } message: {
             Text(vm.alertMessage)
+        }
+        .toolbar {
+            ToolbarItemGroup(placement: .navigation) {
+                Button {
+                    dismiss()
+                } label: {
+                    Text("Save")
+                }
+
+            }
         }
 
     }

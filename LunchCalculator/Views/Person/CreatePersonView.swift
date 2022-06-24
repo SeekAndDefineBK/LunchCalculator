@@ -11,14 +11,16 @@ struct CreatePersonView: View {
     @Environment(\.dismiss) var dismiss
     @StateObject var vm: CreatePersonView_Model
     
-    init(dc: DataController, person: Person? = nil, receipt: Receipt, onSaveAction: @escaping () -> Void) {
+    init(dc: DataController, person: Person? = nil, receipt: Receipt, restaurant: Restaurant, onSaveAction: @escaping () -> Void) {
         let viewModel = CreatePersonView_Model(dc: dc, person: person, onSaveAction: onSaveAction)
         _vm = StateObject(wrappedValue: viewModel)
         self.receipt = receipt
+        self.restaurant = restaurant
     }
     
     @State private var foodData: [FoodData] = [FoodData]()
     private var receipt: Receipt
+    private var restaurant: Restaurant
     
     var body: some View {
         List {
@@ -45,7 +47,7 @@ struct CreatePersonView: View {
                     vm.dc.combinedCreation(
                         personData: vm.personData,
                         foodData: foodData,
-                        receipt: receipt
+                        receipt: receipt, restaurant: restaurant
                     )
                     
                     vm.onSaveAction()

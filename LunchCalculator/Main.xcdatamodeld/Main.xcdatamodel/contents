@@ -14,19 +14,23 @@
         <relationship name="subreceipts" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Subreceipt" inverseName="person" inverseEntity="Subreceipt"/>
     </entity>
     <entity name="Receipt" representedClassName="Receipt" syncable="YES" codeGenerationType="class">
+        <attribute name="cd_date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="cd_fees" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="cd_tax" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="cd_tip" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <relationship name="restaurant" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Restaurant" inverseName="receipts" inverseEntity="Restaurant"/>
+        <relationship name="subreceipts" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Subreceipt" inverseName="receipt" inverseEntity="Subreceipt"/>
+    </entity>
+    <entity name="Restaurant" representedClassName="Restaurant" syncable="YES" codeGenerationType="class">
         <attribute name="cd_address1" optional="YES" attributeType="String"/>
         <attribute name="cd_address2" optional="YES" attributeType="String"/>
         <attribute name="cd_city" optional="YES" attributeType="String"/>
-        <attribute name="cd_date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="cd_fees" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="cd_name" optional="YES" attributeType="String"/>
         <attribute name="cd_phone" optional="YES" attributeType="String"/>
-        <attribute name="cd_restaurant" optional="YES" attributeType="String"/>
         <attribute name="cd_state" optional="YES" attributeType="String"/>
-        <attribute name="cd_tax" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <attribute name="cd_tip" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="cd_website" optional="YES" attributeType="String"/>
         <attribute name="cd_zip" optional="YES" attributeType="String"/>
-        <relationship name="subreceipts" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Subreceipt" inverseName="receipt" inverseEntity="Subreceipt"/>
+        <relationship name="receipts" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Receipt" inverseName="restaurant" inverseEntity="Receipt"/>
     </entity>
     <entity name="Subreceipt" representedClassName="Subreceipt" syncable="YES" codeGenerationType="class">
         <relationship name="food" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Food" inverseName="subreceipt" inverseEntity="Food"/>
@@ -34,9 +38,10 @@
         <relationship name="receipt" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Receipt" inverseName="subreceipts" inverseEntity="Receipt"/>
     </entity>
     <elements>
-        <element name="Food" positionX="-54" positionY="-9" width="128" height="104"/>
+        <element name="Food" positionX="-54" positionY="-9" width="128" height="14"/>
         <element name="Person" positionX="-63" positionY="-18" width="128" height="89"/>
-        <element name="Receipt" positionX="-27" positionY="18" width="128" height="224"/>
+        <element name="Receipt" positionX="-27" positionY="18" width="128" height="119"/>
         <element name="Subreceipt" positionX="-36" positionY="9" width="128" height="14"/>
+        <element name="Restaurant" positionX="-45" positionY="117" width="128" height="164"/>
     </elements>
 </model>

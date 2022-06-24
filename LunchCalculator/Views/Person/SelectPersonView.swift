@@ -11,10 +11,12 @@ struct SelectPersonView: View {
     @Environment(\.dismiss) var dismiss
     var dc: DataController
     var receipt: Receipt
+    var restaurant: Restaurant
     
     //TODO: Convert person to array of Person to allow multiple selection
     @State private var person: Person?
     @State private var showingAddPerson = false
+    @State private var newFoods: [FoodData] = []
     
     var body: some View {
         Form {
@@ -46,7 +48,7 @@ struct SelectPersonView: View {
             }
             
             if showingAddPerson {
-                CreatePersonView(dc: dc, receipt: receipt) {
+                CreatePersonView(dc: dc, receipt: receipt, restaurant: restaurant) {
                     saveAction()
                 }
             }

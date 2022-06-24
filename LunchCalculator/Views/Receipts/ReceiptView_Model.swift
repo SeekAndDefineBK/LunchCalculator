@@ -11,6 +11,7 @@ import CoreData
 extension ReceiptView {
     class ReceiptView_Model: ObservableObject {
         var dc: DataController
+        var restaurant: Restaurant
         @Published var receipt: Receipt
 
         @Published var showingAddPerson = false
@@ -24,9 +25,10 @@ extension ReceiptView {
         @Published var alertTitle = ""
         @Published var alertMessage = ""
 
-        init(dc: DataController, receipt: Receipt) {
+        init(dc: DataController, receipt: Receipt, restaurant: Restaurant) {
             self.dc = dc
             self.receipt = receipt
+            self.restaurant = restaurant
         }
         
         func askToDelete() {

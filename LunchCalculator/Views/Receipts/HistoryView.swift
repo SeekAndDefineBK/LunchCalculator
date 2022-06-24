@@ -20,7 +20,8 @@ struct HistoryView: View {
             List {
                 ForEach(vm.allReceipts) { receipt in
                     NavigationLink {
-                        ReceiptView(dc: vm.dc, receipt: receipt)
+                        //TODO: Is is possible for restaurant to be nil?
+                        ReceiptView(dc: vm.dc, receipt: receipt, restaurant: receipt.restaurant!)
                     } label: {
                         Text(receipt.cd_date?.formatted() ?? Date().formatted())
                     }
@@ -43,7 +44,7 @@ struct HistoryView: View {
             .navigationTitle("Receipt History")
 
             .sheet(isPresented: $vm.showingCreateReceipt) {
-                CreateReceiptView(dc: vm.dc)
+                SelectRestaurantView(dc: vm.dc)
             }
         }
     }

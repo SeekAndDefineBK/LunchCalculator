@@ -91,24 +91,25 @@ struct PersonData {
 }
 
 struct ReceiptData {
-    var restaurant: String
-    var address1: String
-    var address2: String
-    var city: String
-    var state: String
-    var zip: String
-    var phone: String
-    var website: String
+    var restaurant: Restaurant
+
     var date: Date
+    var fees: Double
+    var tax: Double
+    var tip: Double
     
-    static var blank = ReceiptData(
-        restaurant: "",
-        address1: "",
-        address2: "",
-        city: "",
-        state: "",
-        zip: "",
-        phone: "",
-        website: "",
-        date: Date())
+    //Do not create blank data
+}
+
+struct RestaurantData {
+    var address1: String = ""
+    var address2: String = ""
+    var city: String = ""
+    var name: String = ""
+    var phone: String = ""
+    var state: String = ""
+    var website: String = ""
+    var zip: String = ""
+    
+    var receipts: [Receipt]?
 }
