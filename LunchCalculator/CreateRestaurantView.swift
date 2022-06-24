@@ -18,7 +18,7 @@ struct SelectRestaurantView: View {
     var body: some View {
         Form {
             if collapseRestaurant {
-                Text(restaurant?.cd_name ?? "Unknown Restaurant")
+                Text(restaurant!.name)
                     .bold()
             } else {
                 TextFieldHStack(rs: "Restaurant Name", ls: $restaurantData.name)

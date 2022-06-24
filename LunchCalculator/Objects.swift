@@ -25,6 +25,18 @@ extension Receipt {
         let arr = subreceipts?.allObjects as? [Subreceipt] ?? []
         return arr
     }
+    
+    var date: Date {
+        cd_date ?? Date()
+    }
+    
+    var restaurantName: String {
+        restaurant?.name ?? "Warning: Unknown Restaurant"
+    }
+    
+    var title: String {
+        "\(restaurantName) on \(date.formatted(date: .numeric, time: .omitted))"
+    }
 }
 
 extension Person {
@@ -60,6 +72,12 @@ extension Subreceipt {
     
     var totalDue: Double {
         return allFood.reduce(0) { $0 + $1.total}
+    }
+}
+
+extension Restaurant {
+    var name: String {
+        cd_name ?? "Unknown Restuarant Name"
     }
 }
 

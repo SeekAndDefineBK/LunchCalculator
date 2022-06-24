@@ -29,7 +29,7 @@ struct AllFoodView: View {
                     vm.delete(offsets)
                 }
             }
-            .navigationTitle("All People")
+            .navigationTitle("All Food")
         }
     }
 }

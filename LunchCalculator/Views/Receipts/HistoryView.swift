@@ -23,10 +23,9 @@ struct HistoryView: View {
                         //TODO: Is is possible for restaurant to be nil?
                         ReceiptView(dc: vm.dc, receipt: receipt, restaurant: receipt.restaurant!)
                     } label: {
-                        Text(receipt.cd_date?.formatted() ?? Date().formatted())
+                        Text(receipt.title)
                     }
 
-                    
                 }
                 .onDelete { offset in
                     vm.delete(offset)

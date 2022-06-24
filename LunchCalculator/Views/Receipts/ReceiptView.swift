@@ -85,6 +85,7 @@ struct ReceiptView: View {
             .foregroundColor(.red)
 
         }
+        .navigationTitle(vm.restaurant.name)
         .sheet(isPresented: $vm.showingAddPerson) {
             SelectPersonView(dc: vm.dc, receipt: vm.receipt, restaurant: vm.restaurant)
         }
@@ -106,17 +107,6 @@ struct ReceiptView: View {
         } message: {
             Text(vm.alertMessage)
         }
-        .toolbar {
-            ToolbarItemGroup(placement: .navigation) {
-                Button {
-                    dismiss()
-                } label: {
-                    Text("Save")
-                }
-
-            }
-        }
-
     }
 }
 
