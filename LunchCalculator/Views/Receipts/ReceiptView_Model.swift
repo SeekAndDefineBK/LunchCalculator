@@ -24,11 +24,19 @@ extension ReceiptView {
         @Published var showingDeleteAlert = false
         @Published var alertTitle = ""
         @Published var alertMessage = ""
+        
+        @Published var fees: Double
+        @Published var tax: Double
+        @Published var tip: Double
 
         init(dc: DataController, receipt: Receipt, restaurant: Restaurant) {
             self.dc = dc
             self.receipt = receipt
             self.restaurant = restaurant
+            
+            _fees = Published(wrappedValue: receipt.cd_fees)
+            _tax = Published(wrappedValue: receipt.cd_tax)
+            _tip = Published(wrappedValue: receipt.cd_tip)
         }
         
         func askToDelete() {

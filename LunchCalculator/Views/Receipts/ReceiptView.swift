@@ -12,9 +12,6 @@ struct ReceiptView: View {
     @StateObject var vm: ReceiptView_Model
     static let tag = "NewReceipt"
     @State private var selectedSubreceipt: Subreceipt?
-    @State private var fees: Double = 0
-    @State private var tax: Double = 0
-    @State private var tip: Double = 0
     
     init(dc: DataController, receipt: Receipt, restaurant: Restaurant) {
         let viewModel = ReceiptView_Model(
@@ -28,26 +25,21 @@ struct ReceiptView: View {
     
     var body: some View {
         List {
-            Section {
-                Text("Bill: \(vm.receipt.total + tax + tip + fees, specifier: "%.2f")")
-                    .bold()
-                    .font(.title)
-                
-                //TODO: Make this persist, create subview with onChange modifiers
-                DoubleFieldHStack(rs: "Tax:", ls: $tax)
-                DoubleFieldHStack(rs: "Tip:", ls: $tip)
-                DoubleFieldHStack(rs: "Service Fees:", ls: $fees)
-            }
+            ReceiptFeesView(receipt: vm.receipt, tax: $vm.tax, tip: $vm.tip, fees: $vm.fees)
             
             ForEach(vm.receipt.allSubreceipts) { subreceipt in
                 Section {
-                    HStack {
-                        Text(subreceipt.person!.name)
-                            .font(.title)
-                            .bold()
-                        Spacer()
-                        Text("Total Due: \(calculateSplit(subreceipt), specifier: "%.2f")")
-                            .bold()
+                    VStack(alignment: .trailing) {
+                        HStack {
+                            Text(subreceipt.person!.name)
+                                .font(.title)
+                                .bold()
+                            Spacer()
+                            Text("Total Due: \(calculateSplit(subreceipt), specifier: "%.2f")")
+                                .bold()
+                        }
+                        
+                       
                     }
                     
                     ForEach(subreceipt.allFood) { food in
@@ -58,18 +50,31 @@ struct ReceiptView: View {
                                 Text("Item: \(food.name)")
                                     .font(.title3)
 
-                                VStack(alignment: .leading) {
-                                    Text("Menu Price: $\(food.cd_subtotal, specifier: "%.2f")")
-                                    Text("Subtotal: \(food.total, specifier: "%.2f")")
-                                        .italic()
-                                        .bold()
-                                }
-                                .padding(.leading, 10)
-                                
+                                Text("Menu Price: $\(food.cd_subtotal, specifier: "%.2f")")
+                                    .italic()
+                                    .padding(.leading, 10)
                             }
                             .font(.subheadline)
                         }
                     }
+                    
+                    Group {
+                        if vm.tax != 0 {
+                            Text("Tax: $\(calculateTax(subreceipt), specifier: "%.2f")")
+                        }
+                        
+                        if vm.tip != 0 {
+                            Text("Tip: $\(calculateTip(subreceipt), specifier: "%.2f")")
+                        }
+                        
+                        if vm.fees != 0 {
+                            Text("Service Fees: $\(calculateFees(subreceipt), specifier: "%.2f")")
+                        }
+                    }
+                    .font(.subheadline)
+                    .padding(.leading, 10)
+
+                    
                     
                     Button {
                         if let index = vm.receipt.allPeople.firstIndex(where: {$0.id == subreceipt.person!.id}) {
@@ -123,11 +128,57 @@ struct ReceiptView: View {
     }
     
     func calculateSplit(_ subreceipt: Subreceipt) -> Double {
-        let totalExtras = tax + tip + fees
-        let percentageOfExtras = subreceipt.totalDue / vm.receipt.total
+        let tax = calculateTax(subreceipt)
+        let tip = calculateTip(subreceipt)
+        let fees = calculateFees(subreceipt)
         
-        return subreceipt.totalDue + (totalExtras * percentageOfExtras)
+        return subreceipt.totalDue + tax + tip + fees
+    }
+    
+    func calculateTip(_ subreceipt: Subreceipt) -> Double {
+        let percentageOfTip = subreceipt.totalDue / vm.receipt.total
+        
+        return vm.tip * percentageOfTip
+    }
+    
+    func calculateTax(_ subreceipt: Subreceipt) -> Double {
+        let percentageOfTax = subreceipt.totalDue / vm.receipt.total
+        
+        return vm.tax * percentageOfTax
+    }
+    
+    func calculateFees(_ subreceipt: Subreceipt) -> Double {
+        let percentageOfFees = subreceipt.totalDue / vm.receipt.total
+        
+        return vm.fees * percentageOfFees
     }
 }
 
-
+struct ReceiptFeesView: View {
+    @ObservedObject var receipt: Receipt
+    
+    @Binding var tax: Double
+    @Binding var tip: Double
+    @Binding var fees: Double
+    
+    var body: some View {
+        Section {
+            Text("Bill: \(receipt.total + tax + tip + fees, specifier: "%.2f")")
+                .bold()
+                .font(.title)
+            
+            //TODO: Make this persist, create subview with onChange modifiers
+            DoubleFieldHStack(rs: "Tax:", ls: $tax.onChange(update))
+            DoubleFieldHStack(rs: "Tip:", ls: $tip.onChange(update))
+            DoubleFieldHStack(rs: "Service Fees:", ls: $fees.onChange(update))
+        }
+    }
+    
+    func update() {
+        receipt.objectWillChange.send()
+        
+        receipt.cd_tax = tax
+        receipt.cd_tip = tip
+        receipt.cd_fees = fees
+    }
+}
