@@ -93,6 +93,7 @@ struct CreateEditFood: View {
 
             Button(role: .destructive) {
                 vm.dc.delete(vm.food!)
+                dismiss()
             } label: {
                 Text("Delete")
             }

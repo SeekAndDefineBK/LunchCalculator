@@ -37,6 +37,10 @@ extension Receipt {
     var title: String {
         "\(restaurantName) on \(date.formatted(date: .numeric, time: .omitted))"
     }
+    
+    var total: Double {
+        allSubreceipts.reduce(0){ $0 + $1.totalDue }
+    }
 }
 
 extension Person {

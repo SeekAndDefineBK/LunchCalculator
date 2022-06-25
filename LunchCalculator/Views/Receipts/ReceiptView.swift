@@ -12,6 +12,9 @@ struct ReceiptView: View {
     @StateObject var vm: ReceiptView_Model
     static let tag = "NewReceipt"
     @State private var selectedSubreceipt: Subreceipt?
+    @State private var fees: Double = 0
+    @State private var tax: Double = 0
+    @State private var tip: Double = 0
     
     init(dc: DataController, receipt: Receipt, restaurant: Restaurant) {
         let viewModel = ReceiptView_Model(
@@ -25,6 +28,17 @@ struct ReceiptView: View {
     
     var body: some View {
         List {
+            Section {
+                Text("Bill: \(vm.receipt.total + tax + tip + fees, specifier: "%.2f")")
+                    .bold()
+                    .font(.title)
+                
+                //TODO: Make this persist, create subview with onChange modifiers
+                DoubleFieldHStack(rs: "Tax:", ls: $tax)
+                DoubleFieldHStack(rs: "Tip:", ls: $tip)
+                DoubleFieldHStack(rs: "Service Fees:", ls: $fees)
+            }
+            
             ForEach(vm.receipt.allSubreceipts) { subreceipt in
                 Section {
                     HStack {
@@ -32,12 +46,11 @@ struct ReceiptView: View {
                             .font(.title)
                             .bold()
                         Spacer()
-                        Text("Total Due: \(subreceipt.totalDue, specifier: "%.2f")")
+                        Text("Total Due: \(calculateSplit(subreceipt), specifier: "%.2f")")
                             .bold()
                     }
                     
                     ForEach(subreceipt.allFood) { food in
-                        
                         NavigationLink {
                             CreateEditFood(dc: vm.dc, person: subreceipt.person!, food: food, subreceipt: subreceipt)
                         } label: {
@@ -107,6 +120,13 @@ struct ReceiptView: View {
         } message: {
             Text(vm.alertMessage)
         }
+    }
+    
+    func calculateSplit(_ subreceipt: Subreceipt) -> Double {
+        let totalExtras = tax + tip + fees
+        let percentageOfExtras = subreceipt.totalDue / vm.receipt.total
+        
+        return subreceipt.totalDue + (totalExtras * percentageOfExtras)
     }
 }
 
