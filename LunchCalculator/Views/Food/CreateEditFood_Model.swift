@@ -13,67 +13,42 @@ extension CreateEditFood {
         var dc: DataController
         
         var person: Person
-        let editMode: Bool
-        var food: Food?
-        var subreceipt: Subreceipt
-        
-        @Published var foodData: FoodData
-        
+        @Published var allFood: [Food]
+        @ObservedObject var subreceipt: Subreceipt
+                
         @Published var showingDeleteAlert = false
-        
+        @Published var deleteAction: () = ()
+
         @Published var showingOptionalQC = false
         @Published var showingQCAlert = false
         
         @Published var alertTitle = ""
         @Published var alertMessage = ""
-        @Published var alertAction: () = ()
         
-        init(dc: DataController, person: Person, food: Food?, subreceipt: Subreceipt) {
+        init(dc: DataController, person: Person, allFood: [Food], subreceipt: Subreceipt) {
             self.dc = dc
             self.person = person
             self.subreceipt = subreceipt
+            _allFood = Published(wrappedValue: allFood)
             
-            if food == nil {
-                editMode = false
-                _foodData = Published(wrappedValue: FoodData.blank())
+            
+            if allFood.isEmpty {
+                var foodData = FoodData.blank()
                 foodData.person = person
-
-            } else {
-                editMode = true
-                self.food = food
-                _foodData = Published(wrappedValue: FoodData(
-                        name: food!.name,
-                        subtotal: food!.cd_subtotal,
-                        person: person,
-                        subreceipt: food!.subreceipt
-                    )
-                )
+                let newFood = dc.createEditSingleFood(nil, foodData: foodData, subreceipt: subreceipt)
+                
+                self.allFood.append(newFood)
             }
-        }
-
-        func QCInput() -> Bool {
-            if foodData.name == "" {
-                alertTitle = "Provide Food Name"
-                alertMessage = "Please provide a name for this item."
-                showingQCAlert = true
-                return false
-            }
-            
-            if foodData.subtotal <= 0 {
-                alertTitle = "Provide Price"
-                alertMessage = "Please input the price of this item or enter 0 if this item is free."
-                showingQCAlert = true
-                return false
-            }
-
-            return true
         }
         
-        func createFood(action: () -> Void) {
-            if QCInput() {
-                dc.createEditSingleFood(food, foodData: foodData, subreceipt: subreceipt)
-                action()
-            }
+        func addNewFood() {
+            var foodData = FoodData.blank()
+            foodData.person = person
+            
+            let newFood = dc.createEditSingleFood(nil, foodData: foodData, subreceipt: subreceipt)
+            
+            allFood.append(newFood)
+            
         }
     }
 }

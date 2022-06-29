@@ -16,9 +16,14 @@ struct CreatePersonView: View {
         _vm = StateObject(wrappedValue: viewModel)
         self.receipt = receipt
         self.restaurant = restaurant
+        
+        var newFood = FoodData.blank()
+        newFood.person = person
+        
+        _allFood = State(wrappedValue: [dc.createBlankFood()])
     }
     
-    @State private var foodData: [FoodData] = [FoodData]()
+    @State private var allFood: [Food]
     private var receipt: Receipt
     private var restaurant: Restaurant
     
@@ -27,26 +32,27 @@ struct CreatePersonView: View {
             Section {
                 TextFieldHStack(rs: "Name", ls: $vm.personData.name)
                 
-                ForEach($foodData) { $fdata in
+                ForEach(allFood) { food in
                     Section {
-                        FoodForm(
-                            foodData: $fdata
-                        )
+                        FoodForm(food, save: vm.dc.save, delete: deleteFood)
                     }
                 }
                 
                 Button {
                     withAnimation {
-                        foodData.append(FoodData.blank())
+                        let newFood = vm.dc.createBlankFood()
+                        
+                        allFood.append(newFood)
+                        
                     }
                 } label: {
-                    Label(foodData.isEmpty ? "Add Food?" : "Add More?", systemImage: "plus.circle")
+                    Label(allFood.isEmpty ? "Add Food?" : "Add More?", systemImage: "plus.circle")
                 }
 
                 Button {
                     vm.dc.combinedCreation(
                         personData: vm.personData,
-                        foodData: foodData,
+                        allFood: allFood,
                         receipt: receipt, restaurant: restaurant
                     )
                     
@@ -67,5 +73,13 @@ struct CreatePersonView: View {
         } message: {
             Text(vm.alertMessage)
         }
+    }
+    
+    func deleteFood(_ food: Food) {
+        vm.person?.objectWillChange.send()
+        
+        allFood.removeAll(where: {$0.id == food.id})
+        
+        vm.dc.delete(food)
     }
 }

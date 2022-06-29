@@ -23,7 +23,10 @@ struct AllPeopleView: View {
         NavigationView {
             List {
                 ForEach(vm.allPeople) { person in
-                    Text(person.name)
+                    
+                    NavigationLink(person.name) {
+                        SinglePersonView(person: person)
+                    }
                 }
                 .onDelete { offsets in
                     vm.delete(offsets)

@@ -54,12 +54,21 @@ class DataController: ObservableObject {
         save()
     }
     
-    func combinedCreation(personData: PersonData, foodData: [FoodData], receipt: Receipt?, restaurant: Restaurant) {
+    func createBlankFood() -> Food {
+        let newFood = Food(context: container.viewContext)
+        newFood.cd_name = ""
+        newFood.cd_subtotal = 0
+        
+        newFood.id = UUID()
+        
+        return newFood
+    }
+    
+    func combinedCreation(personData: PersonData, allFood: [Food], receipt: Receipt?, restaurant: Restaurant) {
         let newPerson = createEditPerson(nil, personData: personData)
         
-        for i in foodData {
-            let newFood = createEditFood(nil, foodData: i)
-            newFood.person = newPerson
+        for i in allFood {
+            i.person = newPerson
         }
         
         if receipt == nil {
@@ -73,10 +82,10 @@ class DataController: ObservableObject {
         }
         
         func updateReceipt(_ inputReceipt: Receipt) {
-            if foodData.isEmpty {
+            if allFood.isEmpty {
                 addPersonToReceipt(newPerson, receipt: inputReceipt)
             } else {
-                createEditSubreceipt(subreceipt: nil, food: newPerson.allFood, person: newPerson, receipt: inputReceipt)
+                createEditSubreceipt(subreceipt: nil, food: allFood, person: newPerson, receipt: inputReceipt)
             }
         }
         
@@ -181,7 +190,9 @@ class DataController: ObservableObject {
         return output!
     }
     
-    func createEditSingleFood(_ food: Food?, foodData: FoodData, subreceipt: Subreceipt) {
+    func createEditSingleFood(_ food: Food?, foodData: FoodData, subreceipt: Subreceipt) -> Food {
+        var output = food
+        
         if food == nil {
             let newFood = Food(context: container.viewContext)
             updateData(newFood)
@@ -198,8 +209,13 @@ class DataController: ObservableObject {
             
             updateObject.person = foodData.person
             updateObject.subreceipt = subreceipt
+            
+            save()
+            
+            output = updateObject
         }
-        save()
+        
+        return output!
     }
     
     private func createEditSubreceipt(subreceipt: Subreceipt?, food: [Food], person: Person, receipt: Receipt) {

@@ -56,6 +56,12 @@ extension Person {
         let arr = food?.allObjects as? [Food] ?? []
         return arr.sorted(by: {$0.name < $1.name})
     }
+    
+    var totalPaid: Text {
+        let doubleDue = allSubreceipts.reduce(0){ $0 + $1.totalDue }
+        
+        return Text("Total Paid: \(doubleDue, specifier: "%.2f")")
+    }
 }
 
 extension Food {
@@ -65,6 +71,14 @@ extension Food {
     
     var total: Double {
         cd_subtotal
+    }
+    
+    var date: Date {
+        subreceipt?.receipt?.date ?? Date()
+    }
+    
+    var restaurantName: String {
+        subreceipt?.receipt?.restaurantName ?? "Unknown Restaurant"
     }
 }
 
@@ -76,6 +90,10 @@ extension Subreceipt {
     
     var totalDue: Double {
         return allFood.reduce(0) { $0 + $1.total}
+    }
+    
+    var restaurantName: String {
+        receipt?.restaurantName ?? "Unknown Restaurant"
     }
 }
 

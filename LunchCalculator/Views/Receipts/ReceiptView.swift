@@ -25,7 +25,7 @@ struct ReceiptView: View {
     
     var body: some View {
         List {
-            ReceiptFeesView(receipt: vm.receipt, tax: $vm.tax, tip: $vm.tip, fees: $vm.fees)
+            ReceiptFeesView(receipt: vm.receipt, tax: $vm.tax, tip: $vm.tip, fees: $vm.fees, save: vm.dc.save)
             
             ForEach(vm.receipt.allSubreceipts) { subreceipt in
                 Section {
@@ -38,13 +38,11 @@ struct ReceiptView: View {
                             Text("Total Due: \(calculateSplit(subreceipt), specifier: "%.2f")")
                                 .bold()
                         }
-                        
-                       
                     }
                     
                     ForEach(subreceipt.allFood) { food in
                         NavigationLink {
-                            CreateEditFood(dc: vm.dc, person: subreceipt.person!, food: food, subreceipt: subreceipt)
+                            CreateEditFood(dc: vm.dc, person: subreceipt.person!, food: subreceipt.allFood, subreceipt: subreceipt)
                         } label: {
                             VStack(alignment: .leading) {
                                 Text("Item: \(food.name)")
@@ -98,7 +96,7 @@ struct ReceiptView: View {
             Button {
                 vm.askToDelete()
             } label: {
-                Label("Delete Receipt", systemImage: "x.square.fill")
+                Label("Delete Receipt", systemImage: "trash.fill")
             }
             .foregroundColor(.red)
 
@@ -110,7 +108,7 @@ struct ReceiptView: View {
         .sheet(isPresented: $vm.showingAddFood) {
             CreateEditFood(
                 dc: vm.dc,
-                person: vm.receipt.allPeople[vm.selectedPersonIndex], subreceipt: selectedSubreceipt!
+                person: vm.receipt.allPeople[vm.selectedPersonIndex], food: selectedSubreceipt!.allFood, subreceipt: selectedSubreceipt!
             )
         }
         .alert(vm.alertTitle, isPresented: $vm.showingDeleteAlert) {
@@ -161,6 +159,8 @@ struct ReceiptFeesView: View {
     @Binding var tip: Double
     @Binding var fees: Double
     
+    let save: () -> Void
+    
     var body: some View {
         Section {
             Text("Bill: \(receipt.total + tax + tip + fees, specifier: "%.2f")")
@@ -180,5 +180,7 @@ struct ReceiptFeesView: View {
         receipt.cd_tax = tax
         receipt.cd_tip = tip
         receipt.cd_fees = fees
+        
+        save()
     }
 }

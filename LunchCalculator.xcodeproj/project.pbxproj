@@ -36,6 +36,7 @@
 		40F1700528652D8B00141F0E /* AllFoodView_Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F1700428652D8B00141F0E /* AllFoodView_Model.swift */; };
 		40F170072866735100141F0E /* CreateRestaurantView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F170062866735100141F0E /* CreateRestaurantView.swift */; };
 		40F17009286756CD00141F0E /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F17008286756CD00141F0E /* Extensions.swift */; };
+		40F1700B286D17BB00141F0E /* SinglePersonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F1700A286D17BB00141F0E /* SinglePersonView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -88,6 +89,7 @@
 		40F1700428652D8B00141F0E /* AllFoodView_Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllFoodView_Model.swift; sourceTree = "<group>"; };
 		40F170062866735100141F0E /* CreateRestaurantView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateRestaurantView.swift; sourceTree = "<group>"; };
 		40F17008286756CD00141F0E /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		40F1700A286D17BB00141F0E /* SinglePersonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SinglePersonView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -195,6 +197,7 @@
 				40F16FFE286529BD00141F0E /* PeoplePickerView_Model.swift */,
 				40F16FFC2865297E00141F0E /* PeoplePickerView.swift */,
 				40F1700028652B1000141F0E /* SelectPersonView.swift */,
+				40F1700A286D17BB00141F0E /* SinglePersonView.swift */,
 				401F31C8285D27A2005C3806 /* CreatePersonView.swift */,
 				404D45CD285E219000BBA36E /* CreatePersonView_Model.swift */,
 				40F16FF42865271600141F0E /* AllPeopleView.swift */,
@@ -361,6 +364,7 @@
 				404D45CC285E151D00BBA36E /* CreateEditFood_Model.swift in Sources */,
 				405A87DD285EC978004D1DB5 /* HistoryView_Model.swift in Sources */,
 				40F170072866735100141F0E /* CreateRestaurantView.swift in Sources */,
+				40F1700B286D17BB00141F0E /* SinglePersonView.swift in Sources */,
 				40F1700128652B1000141F0E /* SelectPersonView.swift in Sources */,
 				40F1700528652D8B00141F0E /* AllFoodView_Model.swift in Sources */,
 				40F1700328652D7D00141F0E /* AllFoodView.swift in Sources */,
