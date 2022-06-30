@@ -26,18 +26,6 @@ struct CreateEditFood: View {
             Section {
                 ForEach(vm.allFood) { food in
                     FoodForm(food, save: vm.dc.save, delete: deleteAction)
-                    
-//                    Button(role: .destructive) {
-//                        vm.alertTitle = "Delete this item?"
-//                        vm.alertMessage = "Are you sure you want to delete this item? This action cannot be undone."
-//
-//                        vm.deleteAction = deleteAction(food)
-//
-//                        vm.showingDeleteAlert = true
-//                    } label: {
-//                        Label("Delete food?", systemImage: "delete.left.fill")
-//                            .foregroundColor(.red)
-//                    }
                 }
                 Button {
                     vm.addNewFood()

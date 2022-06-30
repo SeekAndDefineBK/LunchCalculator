@@ -36,6 +36,12 @@ struct HomeContainerView: View {
                     Label("Food", systemImage: "leaf")
                 }
             
+            AllRestaurantsView(dc: vm.dc)
+                .tag(AllRestaurantsView.tag)
+                .tabItem {
+                    Label("Restaurants", systemImage: "building.2.crop.circle.fill")
+                }
+            
             Text("Settings")
                 .tag("3")
                 .tabItem {
