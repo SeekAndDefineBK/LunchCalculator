@@ -21,6 +21,16 @@ extension Receipt {
         return output
     }
     
+    var allFood: [Food] {
+        var output = [Food]()
+        
+        for i in allSubreceipts {
+            output += i.allFood
+        }
+        
+        return output
+    }
+    
     var allSubreceipts: [Subreceipt] {
         let arr = subreceipts?.allObjects as? [Subreceipt] ?? []
         return arr
@@ -38,8 +48,16 @@ extension Receipt {
         "\(restaurantName) on \(date.formatted(date: .numeric, time: .omitted))"
     }
     
-    var total: Double {
+    var titleView: Text {
+        Text("\(title). Total of $\(total, specifier: "%.2f")")
+    }
+    
+    var subtotal: Double {
         allSubreceipts.reduce(0){ $0 + $1.totalDue }
+    }
+    
+    var total: Double {
+        subtotal + cd_fees + cd_tax + cd_tip
     }
 }
 
@@ -100,6 +118,24 @@ extension Subreceipt {
 extension Restaurant {
     var name: String {
         cd_name ?? "Unknown Restuarant Name"
+    }
+    
+    var allReceipts: [Receipt] {
+        return receipts?.allObjects as? [Receipt] ?? []
+    }
+    
+    var totalSpent: Double {
+        allReceipts.reduce(0) { $0 + $1.total }
+    }
+    
+    var allFood: [Food] {
+        var output = [Food]()
+        
+        for i in allReceipts {
+            output += i.allFood
+        }
+        
+        return output
     }
 }
 

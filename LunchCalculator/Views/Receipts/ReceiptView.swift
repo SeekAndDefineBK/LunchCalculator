@@ -123,6 +123,11 @@ struct ReceiptView: View {
         } message: {
             Text(vm.alertMessage)
         }
+        .onDisappear {
+            //TODO: Does this fix bug where Total is not updated immediately on Restaurants tab?
+            vm.restaurant.objectWillChange.send()
+            vm.receipt.objectWillChange.send()
+        }
     }
     
     func calculateSplit(_ subreceipt: Subreceipt) -> Double {
@@ -134,19 +139,19 @@ struct ReceiptView: View {
     }
     
     func calculateTip(_ subreceipt: Subreceipt) -> Double {
-        let percentageOfTip = subreceipt.totalDue / vm.receipt.total
+        let percentageOfTip = subreceipt.totalDue / vm.receipt.subtotal
         
         return vm.tip * percentageOfTip
     }
     
     func calculateTax(_ subreceipt: Subreceipt) -> Double {
-        let percentageOfTax = subreceipt.totalDue / vm.receipt.total
+        let percentageOfTax = subreceipt.totalDue / vm.receipt.subtotal
         
         return vm.tax * percentageOfTax
     }
     
     func calculateFees(_ subreceipt: Subreceipt) -> Double {
-        let percentageOfFees = subreceipt.totalDue / vm.receipt.total
+        let percentageOfFees = subreceipt.totalDue / vm.receipt.subtotal
         
         return vm.fees * percentageOfFees
     }
@@ -163,7 +168,7 @@ struct ReceiptFeesView: View {
     
     var body: some View {
         Section {
-            Text("Bill: \(receipt.total + tax + tip + fees, specifier: "%.2f")")
+            Text("Bill: \(receipt.subtotal + tax + tip + fees, specifier: "%.2f")")
                 .bold()
                 .font(.title)
             

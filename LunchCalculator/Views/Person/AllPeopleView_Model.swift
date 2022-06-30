@@ -57,7 +57,6 @@ extension AllPeopleView {
                 let person = allPeople[offset]
                 dc.delete(person)
             }
-            
         }
     }
 }

@@ -20,9 +20,12 @@ struct AllRestaurantsView: View {
         NavigationView {
             List {
                 ForEach(vm.allRestaurants) { restaurant in
-                    NavigationLink(restaurant.name) {
-                        Text(restaurant.name)
+                    NavigationLink("\(restaurant.name) Total Spent \(restaurant.totalSpent, specifier: "%.2f")") {
+                        SingleRestaurantView(dc: vm.dc, restaurant)
                     }
+                }
+                .onDelete { offsets in
+                    vm.delete(offsets)
                 }
             }
             .navigationTitle("All Restaurants")

@@ -51,5 +51,12 @@ extension AllRestaurantsView {
                 allRestaurants = newRestaurants
             }
         }
+        
+        func delete(_ offsets: IndexSet) {
+            for offset in offsets {
+                let restaurant = allRestaurants[offset]
+                dc.delete(restaurant)
+            }
+        }
     }
 }
