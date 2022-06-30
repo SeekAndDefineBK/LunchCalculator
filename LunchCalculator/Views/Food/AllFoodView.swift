@@ -22,12 +22,17 @@ struct AllFoodView: View {
     var body: some View {
         NavigationView {
             List {
-                ForEach(vm.allFood) { food in
-                    Text(food.name)
+                ForEach(vm.allRestaurants) { restaurant in
+                    Section(header: Text(restaurant.name)) {
+                        ForEach(restaurant.allFood) { food in
+                            Text(food.name)
+                        }
+                        .onDelete { offsets in
+                            vm.delete(from: restaurant, offsets)
+                        }
+                    }
                 }
-                .onDelete { offsets in
-                    vm.delete(offsets)
-                }
+                
             }
             .navigationTitle("All Food")
         }

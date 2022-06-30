@@ -42,20 +42,22 @@ struct SingleRestaurantView: View {
             }
             
             Button {
-                
+              showingDeleteAlert = true
             } label: {
                 Label("Delete Restaurant", systemImage: "trash.fill")
             }
-            .navigationTitle(restaurant.name)
-            .alert(alertTitle, isPresented: $showingDeleteAlert) {
-                Button(role: .destructive) {
-                    dc.delete(restaurant)
-                } label: {
-                    Text("Yes")
-                }
-            } message: {
-                Text(alertMessage)
+            .foregroundColor(.red)
+            
+        }
+        .navigationTitle(restaurant.name)
+        .alert(alertTitle, isPresented: $showingDeleteAlert) {
+            Button(role: .destructive) {
+                dc.delete(restaurant)
+            } label: {
+                Text("Yes")
             }
+        } message: {
+            Text(alertMessage)
         }
     }
     

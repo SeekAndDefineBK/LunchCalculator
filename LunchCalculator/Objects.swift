@@ -98,6 +98,12 @@ extension Food {
     var restaurantName: String {
         subreceipt?.receipt?.restaurantName ?? "Unknown Restaurant"
     }
+    
+    //TODO: Make this less dangerous
+    /// Use sparingly, there is a ton of assumptions in this computed property
+    var restaurant: Restaurant {
+        subreceipt!.receipt!.restaurant!
+    }
 }
 
 extension Subreceipt {

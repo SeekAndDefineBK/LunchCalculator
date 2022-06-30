@@ -15,6 +15,7 @@ extension AllFoodView {
         
         private let FoodController: NSFetchedResultsController<Food>
         @Published var allFood = [Food]()
+        @Published var allRestaurants = [Restaurant]()
 
         init(dc: DataController) {
             self.dc = dc
@@ -41,6 +42,12 @@ extension AllFoodView {
             do {
                 try FoodController.performFetch()
                 allFood = FoodController.fetchedObjects ?? []
+                
+                for i in allFood {
+                    if !allRestaurants.contains(i.restaurant) {
+                        allRestaurants.append(i.restaurant)
+                    }
+                }
             } catch {
                 print("Failed to fetch locations from ContentView_ViewModel init.")
             }
@@ -49,6 +56,20 @@ extension AllFoodView {
         func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
             if let newFood = controller.fetchedObjects as? [Food] {
                 allFood = newFood
+                
+                for i in allFood {
+                    if !allRestaurants.contains(i.restaurant) {
+                        allRestaurants.append(i.restaurant)
+                    }
+                }
+            }
+        }
+        
+        func delete(from restaurant: Restaurant, _ offsets: IndexSet) {
+            for offset in offsets {
+                let food = restaurant.allFood[offset]
+                food.objectWillChange.send()
+                dc.delete(food)
             }
         }
         
