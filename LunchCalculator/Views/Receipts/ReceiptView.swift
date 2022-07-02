@@ -11,7 +11,6 @@ struct ReceiptView: View {
     @Environment(\.dismiss) var dismiss
     @StateObject var vm: ReceiptView_Model
     static let tag = "NewReceipt"
-    @State private var selectedSubreceipt: Subreceipt?
     
     init(dc: DataController, receipt: Receipt, restaurant: Restaurant) {
         let viewModel = ReceiptView_Model(
@@ -73,19 +72,14 @@ struct ReceiptView: View {
                     .padding(.leading, 10)
 
                     
-                    
-                    Button {
-                        if let index = vm.receipt.allPeople.firstIndex(where: {$0.id == subreceipt.person!.id}) {
-                            vm.selectedPersonIndex = index
-                            selectedSubreceipt = subreceipt
-                            vm.showingAddFood = true
-                        }
+                    NavigationLink {
+                        CreateEditFood(dc: vm.dc, person: subreceipt.person!, food: subreceipt.allFood, subreceipt: subreceipt)
                     } label: {
                         Label("Add Food", systemImage: "plus.circle")
                     }
                 }
             }
-            
+        
             Button {
                 vm.showingAddPerson = true
                 
@@ -104,12 +98,6 @@ struct ReceiptView: View {
         .navigationTitle(vm.restaurant.name)
         .sheet(isPresented: $vm.showingAddPerson) {
             SelectPersonView(dc: vm.dc, receipt: vm.receipt, restaurant: vm.restaurant)
-        }
-        .sheet(isPresented: $vm.showingAddFood) {
-            CreateEditFood(
-                dc: vm.dc,
-                person: vm.receipt.allPeople[vm.selectedPersonIndex], food: selectedSubreceipt!.allFood, subreceipt: selectedSubreceipt!
-            )
         }
         .alert(vm.alertTitle, isPresented: $vm.showingDeleteAlert) {
             
@@ -166,16 +154,73 @@ struct ReceiptFeesView: View {
     
     let save: () -> Void
     
+    @FocusState var focused: ReceiptFeesFocus?
+    
     var body: some View {
         Section {
             Text("Bill: \(receipt.subtotal + tax + tip + fees, specifier: "%.2f")")
                 .bold()
                 .font(.title)
             
-            //TODO: Make this persist, create subview with onChange modifiers
             DoubleFieldHStack(rs: "Tax:", ls: $tax.onChange(update))
+                .focused($focused, equals: .tax)
+            
             DoubleFieldHStack(rs: "Tip:", ls: $tip.onChange(update))
+                .focused($focused, equals: .tip)
+            
             DoubleFieldHStack(rs: "Service Fees:", ls: $fees.onChange(update))
+                .focused($focused, equals: .fees)
+            
+            //Toolbar is placed within parent because when applied to parent Section, the toolbar items duplicate
+            .toolbar {
+                ToolbarItemGroup(placement: .keyboard) {
+                    KeyboardButton(disabled: focused == .tax, navigation: .previous) {
+                        switchFocus(.previous)
+                    }
+                    
+                    KeyboardButton(disabled: focused == .fees, navigation: .next) {
+                        switchFocus(.next)
+                    }
+                    
+                    Button {
+                        focused = nil
+                    } label: {
+                        Label("Done", systemImage: "checkmark.circle.fill")
+                    }
+                }
+            }
+        }
+        
+    }
+    
+    func switchFocus(_ direction: KeyboardButton.NavigationOptions) {
+        switch focused {
+        case .tax:
+            switch direction {
+            case .previous:
+                focused = nil
+            case .next:
+                focused = .tip
+            }
+            
+        case .tip:
+            switch direction {
+            case .previous:
+                focused = .tax
+            case .next:
+                focused = .fees
+            }
+            
+        case .fees:
+            switch direction {
+            case .previous:
+                focused = .tip
+            case .next:
+                focused = nil
+            }
+            
+        case .none:
+            focused = nil
         }
     }
     
@@ -187,5 +232,9 @@ struct ReceiptFeesView: View {
         receipt.cd_fees = fees
         
         save()
+    }
+    
+    enum ReceiptFeesFocus {
+        case tax, tip, fees
     }
 }

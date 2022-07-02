@@ -33,6 +33,12 @@ struct RestaurantPickerView: View {
                         Label(restaurant.name, systemImage: selectedRestaurant == restaurant ? "checkmark" : "")
                     }
                 }
+                
+                Button {
+                    selectedRestaurant = nil
+                } label: {
+                    Label("None", systemImage: selectedRestaurant == nil ? "checkmark" : "")
+                }
             }
         }
     }

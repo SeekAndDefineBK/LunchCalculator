@@ -32,3 +32,43 @@ struct DoubleFieldHStack: View {
     }
 }
 
+
+struct KeyboardButton: View {
+    enum NavigationOptions {
+        case previous, next
+    }
+
+    
+    let disabled: Bool
+    let navigation: NavigationOptions
+    let action: () -> Void
+    
+    var body: some View {
+        
+        var labelTitle:String {
+            switch navigation {
+            case .previous:
+                return "Previous"
+            case .next:
+                return "Next"
+            }
+        }
+        
+        var labelSymbol:String {
+            switch navigation {
+            case .previous:
+                return "arrow.up"
+            case .next:
+                return "arrow.down"
+            }
+        }
+        
+        return Button(action: {
+            action()
+        }, label: {
+            Label(labelTitle, systemImage: labelSymbol)
+        })
+        .disabled(disabled)
+    }
+}
+

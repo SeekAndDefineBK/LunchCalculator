@@ -44,9 +44,12 @@ extension AllFoodView {
                 allFood = FoodController.fetchedObjects ?? []
                 
                 for i in allFood {
-                    if !allRestaurants.contains(i.restaurant) {
-                        allRestaurants.append(i.restaurant)
+                    if let restaurant = i.restaurant {
+                        if !allRestaurants.contains(restaurant) {
+                            allRestaurants.append(restaurant)
+                        }
                     }
+                    
                 }
             } catch {
                 print("Failed to fetch locations from ContentView_ViewModel init.")
@@ -58,8 +61,10 @@ extension AllFoodView {
                 allFood = newFood
                 
                 for i in allFood {
-                    if !allRestaurants.contains(i.restaurant) {
-                        allRestaurants.append(i.restaurant)
+                    if let restaurant = i.restaurant {
+                        if !allRestaurants.contains(restaurant) {
+                            allRestaurants.append(restaurant)
+                        }
                     }
                 }
             }

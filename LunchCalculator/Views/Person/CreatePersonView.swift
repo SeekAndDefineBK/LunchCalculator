@@ -27,6 +27,9 @@ struct CreatePersonView: View {
     private var receipt: Receipt
     private var restaurant: Restaurant
     
+    @FocusState var focused: String?
+
+    
     var body: some View {
         List {
             Section {
@@ -34,7 +37,12 @@ struct CreatePersonView: View {
                 
                 ForEach(allFood) { food in
                     Section {
-                        FoodForm(food, save: vm.dc.save, delete: deleteFood)
+                        FoodForm(
+                            food,
+                            save: vm.dc.save,
+                            focus: _focused,
+                            index: allFood.firstIndex(where: {$0 == food})!
+                        )
                     }
                 }
                 

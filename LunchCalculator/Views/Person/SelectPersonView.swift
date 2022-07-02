@@ -47,7 +47,7 @@ struct SelectPersonView: View {
                     Button {
                         saveAction()
                     } label: {
-                        Label("Save", systemImage: "")
+                        Label("Save", systemImage: "plus.circle")
                     }
                 }
             }

@@ -30,8 +30,10 @@ struct SelectRestaurantView: View {
                 
                 //MARK: User wants to choose an exisiting Restaurant
                 RestaurantPickerView(dc: dc, selectedRestaurant: $restaurant)
+                
+                
 
-            } else if collapseRestaurant && receipt == nil {
+            } else if collapseRestaurant && receipt == nil && restaurant != nil {
                 
                 //MARK: User has selected an existing restaurant, but has not yet decided to move into the bill portion
                 Text(restaurant!.name)
@@ -53,7 +55,14 @@ struct SelectRestaurantView: View {
                         }
                     }
                 } label: {
-                    Label("Select Restaurant", systemImage: "building.2.crop.circle.fill")
+                    if addExistingRestaurant {
+                        Text("Done")
+                    } else {
+                        Label(restaurant == nil
+                              ? "Select Existing Restaurant" : "Select Different Restaurant",
+                              systemImage: "building.2.crop.circle.fill"
+                        )
+                    }
                 }
                 
                 Button {
@@ -63,6 +72,7 @@ struct SelectRestaurantView: View {
                 }
             }
         }
+        .navigationTitle("Create Receipt")
     }
     
     /// This will collapse the Create Restaurant user input
@@ -94,14 +104,138 @@ struct SelectRestaurantView: View {
 struct CreateRestaurantView: View {
     @Binding var restaurantData: RestaurantData
     
+    @FocusState var focused: CreateRestaurantFocus?
+    
     var body: some View {
-        TextFieldHStack(rs: "Restaurant Name", ls: $restaurantData.name)
-        TextFieldHStack(rs: "Address 1", ls: $restaurantData.address1)
-        TextFieldHStack(rs: "Address 2", ls: $restaurantData.address2)
-        TextFieldHStack(rs: "City", ls: $restaurantData.city)
-        TextFieldHStack(rs: "State", ls: $restaurantData.state)
-        TextFieldHStack(rs: "ZIP", ls: $restaurantData.zip)
-        TextFieldHStack(rs: "Website", ls: $restaurantData.website)
-        TextFieldHStack(rs: "Phone", ls: $restaurantData.phone)
+        Section {
+            TextFieldHStack(rs: "Restaurant Name", ls: $restaurantData.name)
+                .focused($focused, equals: .name)
+            
+            TextFieldHStack(rs: "Address 1", ls: $restaurantData.address1)
+                .focused($focused, equals: .add1)
+            
+            TextFieldHStack(rs: "Address 2", ls: $restaurantData.address2)
+                .focused($focused, equals: .add2)
+            
+            TextFieldHStack(rs: "City", ls: $restaurantData.city)
+                .focused($focused, equals: .city)
+            
+            TextFieldHStack(rs: "State", ls: $restaurantData.state)
+                .focused($focused, equals: .state)
+            
+            TextFieldHStack(rs: "ZIP", ls: $restaurantData.zip)
+                .keyboardType(.numberPad)
+                .focused($focused, equals: .zip)
+            
+            TextFieldHStack(rs: "Website", ls: $restaurantData.website)
+                .keyboardType(.URL)
+                .focused($focused, equals: .website)
+            
+            TextFieldHStack(rs: "Phone", ls: $restaurantData.phone)
+                .keyboardType(.phonePad)
+                .focused($focused, equals: .phone)
+            
+            //Toolbar is placed within parent because when applied to parent Section, the toolbar items duplicate
+            .toolbar {
+                ToolbarItemGroup(placement: .keyboard) {
+                    KeyboardButton(disabled: focused == .name, navigation: .previous) {
+                        switchFocus(.previous)
+                    }
+                    
+                    KeyboardButton(disabled: focused == .phone, navigation: .next) {
+                        switchFocus(.next)
+                    }
+                    
+                    Button {
+                        focused = nil
+                    } label: {
+                        Label("Done", systemImage: "checkmark.circle.fill")
+                    }
+                }
+            }
+        }
+    }
+    
+    func switchFocus(_ direction: KeyboardButton.NavigationOptions) {
+        switch focused {
+        case .name:
+            switch direction {
+            case .next:
+                focused = .add1
+
+            case .previous:
+                focused = nil
+            }
+
+        case .add1:
+            switch direction {
+            case .next:
+                focused = .add2
+
+            case .previous:
+                focused = .name
+            }
+
+        case .add2:
+            switch direction {
+            case .next:
+                focused = .city
+
+            case .previous:
+                focused = .add1
+            }
+
+        case .city:
+            switch direction {
+            case .next:
+                focused = .state
+
+            case .previous:
+                focused = .add2
+            }
+
+        case .state:
+            switch direction {
+            case .next:
+                focused = .zip
+
+            case .previous:
+                focused = .city
+            }
+
+        case .zip:
+            switch direction {
+            case .next:
+                focused = .website
+
+            case .previous:
+                focused = .state
+            }
+
+        case .website:
+            switch direction {
+            case .next:
+                focused = .phone
+
+            case .previous:
+                focused = .zip
+            }
+
+        case .phone:
+            switch direction {
+            case .next:
+                focused = nil
+
+            case .previous:
+                focused = .website
+            }
+
+        case .none:
+            focused = nil
+        }
+    }
+    
+    enum CreateRestaurantFocus {
+        case name, add1, add2, city, state, zip, website, phone
     }
 }

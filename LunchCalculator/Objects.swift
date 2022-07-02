@@ -101,8 +101,8 @@ extension Food {
     
     //TODO: Make this less dangerous
     /// Use sparingly, there is a ton of assumptions in this computed property
-    var restaurant: Restaurant {
-        subreceipt!.receipt!.restaurant!
+    var restaurant: Restaurant? {
+        subreceipt?.receipt?.restaurant
     }
 }
 

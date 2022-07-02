@@ -21,11 +21,26 @@ struct CreateEditFood: View {
         _vm = StateObject(wrappedValue: viewModel)
     }
 
+    @FocusState var focused: String?
+    @State private var focusedIndex = 0
+    
+    @State private var showingDeleteAlert = false
+    @State private var alertTitle = ""
+    @State private var alertMessage = ""
+
     var body: some View {
         Form {
             Section {
                 ForEach(vm.allFood) { food in
-                    FoodForm(food, save: vm.dc.save, delete: deleteAction)
+                    FoodForm(
+                        food,
+                        save: vm.dc.save,
+                        focus: _focused,
+                        index: vm.allFood.firstIndex(where: {$0 == food})!
+                    )
+                    .onTapGesture {
+                        assignFocus(food)
+                    }
                 }
                 Button {
                     vm.addNewFood()
@@ -49,7 +64,6 @@ struct CreateEditFood: View {
             }
 
             Button(role: .destructive) {
-//                vm.deleteAction()
                 dismiss()
             } label: {
                 Text("Delete")
@@ -58,6 +72,127 @@ struct CreateEditFood: View {
             Text(vm.alertMessage)
         }
         .navigationTitle("Add Food")
+        .alert(alertTitle, isPresented: $showingDeleteAlert) {
+            Button(role: .destructive) {
+                withAnimation {
+                    deleteAction(vm.allFood[focusedIndex])
+                }
+            } label: {
+                Text("Yes")
+            }
+
+        } message: {
+            Text(alertMessage)
+        }
+        .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                KeyboardButton(disabled: isPreviousDisabled(), navigation: .previous) {
+                    switchFocus(.previous)
+                }
+                
+                KeyboardButton(disabled: isNextDisabled(), navigation: .next) {
+                    switchFocus(.next)
+                }
+                
+                Spacer()
+                
+                Button {
+                    showDeleteAlert()
+                } label: {
+                    Label("Delete", systemImage: "trash.fill")
+                        .foregroundColor(.red)
+                }
+                
+                Spacer()
+                
+                Button {
+                    focused = nil
+                } label: {
+                    Label("Done", systemImage: "checkmark.circle.fill")
+                }
+
+            }
+        }
+    }
+    
+    func showDeleteAlert() {
+        alertTitle = "Delete Food?"
+        
+        var foodName: String {
+            if vm.allFood[focusedIndex].name == "" {
+                return "Unnamed food"
+            } else {
+                return vm.allFood[focusedIndex].name
+            }
+        }
+        
+        alertMessage = "Are you sure you want to delete \(foodName)? This cannot be undone."
+        showingDeleteAlert = true
+    }
+            
+    func assignFocus(_ food: Food) {
+        focusedIndex = vm.allFood.firstIndex(where: { $0 == food })!
+    }
+    
+    func isPreviousDisabled() -> Bool {
+        if vm.allFood.count == 0 {
+            return true
+        } else {
+            return focused == "\(0).name"
+        }
+    }
+    
+    func isNextDisabled() -> Bool {
+        if vm.allFood.count == 0 {
+            return true
+        } else {
+            let lastIndex = vm.allFood.count - 1
+            return focused == "\(lastIndex).price"
+        }
+    }
+    
+    func switchFocus(_ direction: KeyboardButton.NavigationOptions) {
+        switch focused {
+            
+        case "\(focusedIndex).name":
+            switch direction {
+            
+            case .next:
+                focused = "\(focusedIndex).price"
+            
+            case .previous:
+                let previousIndex: Int = focusedIndex - 1
+                
+                if previousIndex < 0 {
+                    focused = nil
+                    focusedIndex = 0
+                } else {
+                    focused = "\(previousIndex).price"
+                    focusedIndex = previousIndex
+                }
+            }
+            
+        case "\(focusedIndex).price":
+            
+            switch direction {
+            case .next:
+                let nextIndex: Int = focusedIndex + 1
+                
+                if nextIndex > vm.allFood.count - 1 {
+                    focused = nil
+                    focusedIndex = 0
+                } else {
+                    focused = "\(nextIndex).name"
+                    focusedIndex = nextIndex
+                }
+                
+            case .previous:
+                focused = "\(focusedIndex).name"
+            }
+            
+        default:
+            focused = nil
+        }
     }
     
     func deleteAction(_ food: Food) {
@@ -73,59 +208,32 @@ struct CreateEditFood: View {
 struct FoodForm: View {
     @ObservedObject var food: Food
     
+    @FocusState var focused: String?
+    
     @State private var name = ""
     @State private var subtotal: Double = 0
     
     let save: () -> Void
-    let delete: (Food) -> Void
+    let index: Int
     
-    @State private var showingDeleteAlert = false
-    @State private var alertTitle = ""
-    @State private var alertMessage = ""
-    
-    init(_ food: Food, save: @escaping () -> Void, delete: @escaping (Food) -> Void) {
+    init(_ food: Food, save: @escaping () -> Void, focus: FocusState<String?>, index: Int) {
         _food = ObservedObject(wrappedValue: food)
         
         _name = State(wrappedValue: food.name)
         _subtotal = State(wrappedValue: food.cd_subtotal)
+        _focused = focus
         
         self.save = save
-        self.delete = delete
+        self.index = index
     }
     
     var body: some View {
         Section {
-            HStack {
-                TextFieldHStack(rs: "Food name", ls: $name.onChange(update))
-                Button {
-                    showDeleteAlert()
-                } label: {
-                    Label("Delete", systemImage: "trash.fill")
-                        .labelStyle(.iconOnly)
-                }
-                .foregroundColor(.red)
-
-            }
+            TextFieldHStack(rs: "Food name", ls: $name.onChange(update))
+                .focused($focused, equals: "\(index).name")
             DoubleFieldHStack(rs: "Menu Price", ls: $subtotal.onChange(update))
+                .focused($focused, equals: "\(index).price")
         }
-        .alert(alertTitle, isPresented: $showingDeleteAlert) {
-            Button(role: .destructive) {
-                withAnimation {
-                    delete(food)
-                }
-            } label: {
-                Text("Yes")
-            }
-
-        } message: {
-            Text(alertMessage)
-        }
-    }
-    
-    func showDeleteAlert() {
-        alertTitle = "Delete Food?"
-        alertMessage = "Are you sure you want to delete \(food.name)? This cannot be undone."
-        showingDeleteAlert = true
     }
     
     func update() {

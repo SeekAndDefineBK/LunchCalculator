@@ -15,7 +15,6 @@ extension HistoryView {
         
         private let ReceiptController: NSFetchedResultsController<Receipt>
         @Published var allReceipts = [Receipt]()
-        @Published var showingCreateReceipt = false
 
 
         init(dc: DataController) {

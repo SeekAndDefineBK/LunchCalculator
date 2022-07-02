@@ -15,9 +15,7 @@ extension ReceiptView {
         @Published var receipt: Receipt
 
         @Published var showingAddPerson = false
-        @Published var showingAddFood = false
 
-        @Published var selectedPersonIndex: Int = 0
         @Published var selectedFoodIndex: Int = 0
         @Published var showEditFood = false
         

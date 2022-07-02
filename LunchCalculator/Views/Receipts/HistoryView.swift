@@ -18,6 +18,14 @@ struct HistoryView: View {
     var body: some View {
         NavigationView {
             List {
+                Section {
+                    NavigationLink {
+                        SelectRestaurantView(dc: vm.dc)
+                    } label: {
+                        Label("Create Receipt", systemImage: "plus.circle")
+                    }
+                }
+                
                 ForEach(vm.allReceipts) { receipt in
                     NavigationLink {
                         //TODO: Is is possible for restaurant to be nil?
@@ -25,26 +33,12 @@ struct HistoryView: View {
                     } label: {
                         Text(receipt.title)
                     }
-
                 }
                 .onDelete { offset in
                     vm.delete(offset)
                 }
             }
-            .toolbar {
-                ToolbarItemGroup(placement: .navigationBarTrailing) {
-                    Button {
-                        vm.showingCreateReceipt = true
-                    } label: {
-                        Label("Create Receipt", systemImage: "plus.circle")
-                    }
-                }
-            }
             .navigationTitle("Receipt History")
-
-            .sheet(isPresented: $vm.showingCreateReceipt) {
-                SelectRestaurantView(dc: vm.dc)
-            }
         }
     }
 }
