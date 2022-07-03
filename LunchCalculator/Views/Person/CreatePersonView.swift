@@ -19,56 +19,38 @@ struct CreatePersonView: View {
         
         var newFood = FoodData.blank()
         newFood.person = person
-        
-        _allFood = State(wrappedValue: [dc.createBlankFood()])
     }
     
-    @State private var allFood: [Food]
     private var receipt: Receipt
     private var restaurant: Restaurant
     
-    @FocusState var focused: String?
-
+    @State private var person: Person?
+    @State private var subreceipt: Subreceipt?
     
     var body: some View {
         List {
             Section {
                 TextFieldHStack(rs: "Name", ls: $vm.personData.name)
-                
-                ForEach(allFood) { food in
-                    Section {
-                        FoodForm(
-                            food,
-                            save: vm.dc.save,
-                            focus: _focused,
-                            index: allFood.firstIndex(where: {$0 == food})!
-                        )
-                    }
-                }
-                
+                            
                 Button {
-                    withAnimation {
-                        let newFood = vm.dc.createBlankFood()
-                        
-                        allFood.append(newFood)
-                        
+                    //TODO: Do not create without a name value
+                    if vm.personData.name ==  "" {
+                        vm.onSaveAction()
+                    } else {
+                        withAnimation {
+                            person = vm.dc.createEditPerson(nil, personData: vm.personData)
+                            vm.personData.name = ""
+                        }
                     }
+                    
+                    
                 } label: {
-                    Label(allFood.isEmpty ? "Add Food?" : "Add More?", systemImage: "plus.circle")
+                    Label("Save", systemImage: "plus.circle")
                 }
 
-                Button {
-                    vm.dc.combinedCreation(
-                        personData: vm.personData,
-                        allFood: allFood,
-                        receipt: receipt, restaurant: restaurant
-                    )
-                    
-                    vm.onSaveAction()
-                } label: {
-                    Label("Save", systemImage: "person.crop.circle.fill.badge.plus")
-                }
-                
+//                if person != nil && subreceipt != nil{
+//                    CreateEditFood(dc: vm.dc, person: person!, food: person!.allFood, subreceipt: subreceipt!)
+//                }
             }
         }
         .alert(vm.alertTitle, isPresented: $vm.showingQCAlert) {
@@ -83,11 +65,11 @@ struct CreatePersonView: View {
         }
     }
     
-    func deleteFood(_ food: Food) {
-        vm.person?.objectWillChange.send()
-        
-        allFood.removeAll(where: {$0.id == food.id})
-        
-        vm.dc.delete(food)
-    }
+//    func deleteFood(_ food: Food) {
+//        vm.person?.objectWillChange.send()
+//
+//        allFood.removeAll(where: {$0.id == food.id})
+//
+//        vm.dc.delete(food)
+//    }
 }

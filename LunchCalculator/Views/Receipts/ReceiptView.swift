@@ -80,9 +80,8 @@ struct ReceiptView: View {
                 }
             }
         
-            Button {
-                vm.showingAddPerson = true
-                
+            NavigationLink {
+                SelectPersonView(dc: vm.dc, receipt: vm.receipt, restaurant: vm.restaurant)
             } label: {
                 Label("Add Person", systemImage: "person.crop.circle.fill.badge.plus")
             }
@@ -96,9 +95,6 @@ struct ReceiptView: View {
 
         }
         .navigationTitle(vm.restaurant.name)
-        .sheet(isPresented: $vm.showingAddPerson) {
-            SelectPersonView(dc: vm.dc, receipt: vm.receipt, restaurant: vm.restaurant)
-        }
         .alert(vm.alertTitle, isPresented: $vm.showingDeleteAlert) {
             
             Button(role: .destructive) {

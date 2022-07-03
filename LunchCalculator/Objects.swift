@@ -106,6 +106,35 @@ extension Food {
     }
 }
 
+struct FoodContainer: Identifiable {
+    var id = UUID()
+    var name: String
+    var displayName: String {
+        if name == "" {
+            return "Unknown Foodname"
+        } else {
+            return name
+        }
+    }
+    var allEntries: [Food]
+//    var allRestaurants: [Restaurant]
+    
+    init(_ newEntry: [Food]) {
+        self.allEntries = newEntry
+        
+        
+        var newName: String {
+            if newEntry.isEmpty{
+                return "Unknown"
+            } else {
+                return newEntry[0].name
+            }
+        }
+        
+        self.name = newName
+    }
+}
+
 extension Subreceipt {
     var allFood: [Food] {
         let arr = food?.allObjects as? [Food] ?? []

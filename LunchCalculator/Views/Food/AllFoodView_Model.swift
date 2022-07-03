@@ -16,6 +16,7 @@ extension AllFoodView {
         private let FoodController: NSFetchedResultsController<Food>
         @Published var allFood = [Food]()
         @Published var allRestaurants = [Restaurant]()
+        @Published var allFoodContainers = [FoodContainer]()
 
         init(dc: DataController) {
             self.dc = dc
@@ -48,6 +49,13 @@ extension AllFoodView {
                         if !allRestaurants.contains(restaurant) {
                             allRestaurants.append(restaurant)
                         }
+                    }
+                    
+                    if let newIndex = allFoodContainers.firstIndex(where: {$0.name == i.name}) {
+                        allFoodContainers[newIndex].allEntries.append(i)
+                    } else {
+                        let newFoodContainer = FoodContainer([i])
+                        allFoodContainers.append(newFoodContainer)
                     }
                     
                 }

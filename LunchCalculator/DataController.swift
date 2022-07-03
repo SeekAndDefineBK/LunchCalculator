@@ -64,34 +64,6 @@ class DataController: ObservableObject {
         return newFood
     }
     
-    func combinedCreation(personData: PersonData, allFood: [Food], receipt: Receipt?, restaurant: Restaurant) {
-        let newPerson = createEditPerson(nil, personData: personData)
-        
-        for i in allFood {
-            i.person = newPerson
-        }
-        
-        if receipt == nil {
-            let receiptData = ReceiptData(restaurant: restaurant, date: Date(), fees: 0, tax: 0, tip: 0)
-            
-            let newReceipt = createEditReceipt(receipt, receiptData: receiptData, restaurant: restaurant)
-            
-            updateReceipt(newReceipt)
-        } else {
-            updateReceipt(receipt!)
-        }
-        
-        func updateReceipt(_ inputReceipt: Receipt) {
-            if allFood.isEmpty {
-                addPersonToReceipt(newPerson, receipt: inputReceipt)
-            } else {
-                createEditSubreceipt(subreceipt: nil, food: allFood, person: newPerson, receipt: inputReceipt)
-            }
-        }
-        
-        save()
-    }
-    
     func createEditRestaurant(_ restaurant: Restaurant?, restaurantData: RestaurantData) -> Restaurant {
         var output = restaurant
         
@@ -218,7 +190,8 @@ class DataController: ObservableObject {
         return output!
     }
     
-    private func createEditSubreceipt(subreceipt: Subreceipt?, food: [Food], person: Person, receipt: Receipt) {
+    func createEditSubreceipt(subreceipt: Subreceipt?, food: [Food], person: Person, receipt: Receipt) {
+        
         if subreceipt == nil {
             let newSubreceipt = Subreceipt(context: container.viewContext)
             updateData(newSubreceipt)
@@ -232,9 +205,8 @@ class DataController: ObservableObject {
             for i in food {
                 i.subreceipt = updateObject
             }
+            save()
         }
-        
-        save()
     }
     
     func addPersonToReceipt(_ person: Person, receipt: Receipt) {

@@ -16,6 +16,7 @@ struct CreateEditFood: View {
     ///   - dc: DataController from the environment
     ///   - person: Person who will be assigned or is currently assigned to the food
     ///   - food: Optional value of Food. If NIL, new food will be created. If Not-NIL, food will be edited
+    ///   - subreceipt: 
     init(dc: DataController, person: Person, food: [Food], subreceipt: Subreceipt) {
         let viewModel = CreateEditFood_Model(dc: dc, person: person, allFood: food, subreceipt: subreceipt)
         _vm = StateObject(wrappedValue: viewModel)
@@ -176,7 +177,7 @@ struct CreateEditFood: View {
             
             switch direction {
             case .next:
-                let nextIndex: Int = focusedIndex + 1
+                let nextIndex = focusedIndex + 1
                 
                 if nextIndex > vm.allFood.count - 1 {
                     focused = nil

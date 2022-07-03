@@ -42,6 +42,7 @@
 		40F170072866735100141F0E /* SelectRestaurantView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F170062866735100141F0E /* SelectRestaurantView.swift */; };
 		40F17009286756CD00141F0E /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F17008286756CD00141F0E /* Extensions.swift */; };
 		40F1700B286D17BB00141F0E /* SinglePersonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F1700A286D17BB00141F0E /* SinglePersonView.swift */; };
+		40F668DA2871EE2200CDD5CF /* FoodContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F668D92871EE2200CDD5CF /* FoodContainerView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -100,6 +101,7 @@
 		40F170062866735100141F0E /* SelectRestaurantView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectRestaurantView.swift; sourceTree = "<group>"; };
 		40F17008286756CD00141F0E /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		40F1700A286D17BB00141F0E /* SinglePersonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SinglePersonView.swift; sourceTree = "<group>"; };
+		40F668D92871EE2200CDD5CF /* FoodContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodContainerView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -245,6 +247,7 @@
 			children = (
 				40F1700228652D7D00141F0E /* AllFoodView.swift */,
 				40F1700428652D8B00141F0E /* AllFoodView_Model.swift */,
+				40F668D92871EE2200CDD5CF /* FoodContainerView.swift */,
 				404D45CB285E151D00BBA36E /* CreateEditFood_Model.swift */,
 				401F31C5285D2766005C3806 /* CreateEditFood.swift */,
 			);
@@ -407,6 +410,7 @@
 				401F31CD285D27E0005C3806 /* ThemeModel.swift in Sources */,
 				404D45C8285E0F9900BBA36E /* Main.xcdatamodeld in Sources */,
 				40F17009286756CD00141F0E /* Extensions.swift in Sources */,
+				40F668DA2871EE2200CDD5CF /* FoodContainerView.swift in Sources */,
 				404D45CA285E12F300BBA36E /* DataController.swift in Sources */,
 				401F31C6285D2766005C3806 /* CreateEditFood.swift in Sources */,
 				401F319C285D165E005C3806 /* LunchCalculatorApp.swift in Sources */,

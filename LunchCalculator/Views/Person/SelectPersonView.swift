@@ -50,13 +50,17 @@ struct SelectPersonView: View {
                         Label("Save", systemImage: "plus.circle")
                     }
                 }
-            }
-            
-            if showingAddPerson {
-                CreatePersonView(dc: dc, receipt: receipt, restaurant: restaurant) {
+            } else {
+                CreatePersonView(dc: dc, receipt: receipt, restaurant: restaurant, onSaveAction: saveAction)
+                
+                Button {
                     saveAction()
+                } label: {
+                    Text("Done")
                 }
             }
+            
+            
         }
     }
     
