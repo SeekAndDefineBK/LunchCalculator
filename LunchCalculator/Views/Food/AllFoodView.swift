@@ -24,12 +24,8 @@ struct AllFoodView: View {
             List {
                 ForEach(vm.allFoodContainers) { foodContainer in
                     NavigationLink(foodContainer.displayName) {
-                        FoodContainerView(foodContainer)
+                        FoodContainerView(dc: vm.dc, foodContainer)
                     }
-                    
-//                    .onDelete { offsets in
-//                        vm.delete(from: restaurant, offsets)
-//                    }
                 }
 
             }

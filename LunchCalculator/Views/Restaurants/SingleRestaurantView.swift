@@ -34,9 +34,17 @@ struct SingleRestaurantView: View {
             Section(header: Text("All Food")) {
                 ForEach(restaurant.allFood) { food in
                     NavigationLink {
-                        Text(food.name)
+                        SingleFoodView(dc, food: food)
                     } label: {
-                        Text(food.name)
+                        HStack {
+                            Text(food.name)
+                            
+                            Spacer()
+                            
+                            Text("$\(food.cd_subtotal, specifier: "%.2f")")
+                                .bold()
+                        }
+                        
                     }
                 }
             }

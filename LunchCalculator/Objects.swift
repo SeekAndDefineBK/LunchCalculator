@@ -84,7 +84,11 @@ extension Person {
 
 extension Food {
     var name: String {
-        cd_name ?? "Unknown Food Name"
+        if cd_name == nil || cd_name == "" {
+            return "Unknown Food Name"
+        } else {
+            return cd_name!
+        }
     }
     
     var total: Double {
@@ -117,7 +121,38 @@ struct FoodContainer: Identifiable {
         }
     }
     var allEntries: [Food]
-//    var allRestaurants: [Restaurant]
+    
+    var allRestaurants: [Restaurant] {
+        var output = [Restaurant]()
+        
+        for i in allEntries {
+            if !output.contains(where: {i.restaurant == $0}) {
+                if let restaurant = i.restaurant {
+                    output.append(restaurant)
+                }
+            }
+        }
+        
+        return output
+    }
+    
+    var allPeople: [Person] {
+        var output = [Person]()
+        
+        for i in allEntries {
+            if !output.contains(where: {i.person == $0}) {
+                if let person = i.person {
+                    output.append(person)
+                }
+            }
+        }
+        
+        return output
+    }
+    
+    var totalSpent: Double {
+        allEntries.reduce(0) { $0 + $1.total }
+    }
     
     init(_ newEntry: [Food]) {
         self.allEntries = newEntry
@@ -130,7 +165,7 @@ struct FoodContainer: Identifiable {
                 return newEntry[0].name
             }
         }
-        
+
         self.name = newName
     }
 }
@@ -145,8 +180,32 @@ extension Subreceipt {
         return allFood.reduce(0) { $0 + $1.total}
     }
     
+
     var restaurantName: String {
         receipt?.restaurantName ?? "Unknown Restaurant"
+    }
+    
+    //TODO: Do you need this? Is it better on Food? Or do the calculations on Receipt make these unnecessary?
+    var totalWithExtrasDue: Double {
+        return totalDue + splitTaxAmount + splitTipAmount + splitFeesAmount
+    }
+
+    var billPercentage: Double {
+        let receiptTotal = receipt?.total ?? 0
+
+        return totalDue / receiptTotal
+    }
+
+    var splitTipAmount: Double {
+        return (receipt?.cd_tip ?? 0) * billPercentage
+    }
+
+    var splitFeesAmount: Double {
+        return (receipt?.cd_fees ?? 0) * billPercentage
+    }
+
+    var splitTaxAmount: Double {
+        return (receipt?.cd_tax ?? 0) * billPercentage
     }
 }
 
