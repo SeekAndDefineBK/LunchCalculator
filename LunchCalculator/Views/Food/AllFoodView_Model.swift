@@ -51,10 +51,8 @@ extension AllFoodView {
                         }
                     }
                     
-                    if let newIndex = allFoodContainers.firstIndex(where: {$0.name == i.name}) {
-                        allFoodContainers[newIndex].allEntries.append(i)
-                    } else {
-                        let newFoodContainer = FoodContainer([i])
+                    if !allFoodContainers.contains(where: {$0.rawName == i.rawName}) {
+                        let newFoodContainer = FoodContainer(i)
                         allFoodContainers.append(newFoodContainer)
                     }
                     

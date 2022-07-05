@@ -1,33 +1,36 @@
 //
-//  SwiftUIView.swift
+//  NuFoodContainer.swift
 //  LunchCalculator
 //
-//  Created by Brett Koster on 7/3/22.
+//  Created by Brett Koster on 7/4/22.
 //
 
 import SwiftUI
+import CoreData
+
+enum FoodContainerSorted: String, CaseIterable {
+    case Restaurants = "Restaurants"
+    case People = "People"
+}
 
 struct FoodContainerView: View {
-    var dc: DataController
+    @StateObject var vm: FoodContainerView_Model
     @State private var sortedBy: FoodContainerSorted = .Restaurants
     
-    var foodContainer: FoodContainer
-    
-    init(dc: DataController, _ foodContainer: FoodContainer) {
-        self.foodContainer = foodContainer
-        self.dc = dc
+    init(dc: DataController, predicateStr: String) {
+        let viewModel = FoodContainerView_Model(dc: dc, predicateStr: predicateStr)
+        _vm = StateObject(wrappedValue: viewModel)
     }
     
     var body: some View {
         List {
-            Text("Total Spent on \(foodContainer.displayName): $\(foodContainer.totalSpent, specifier: "%.2f")")
+            Text("Total Spent on \(vm.displayName): $\(vm.totalSpent, specifier: "%.2f")")
             
             Section(header: Text("All Food")) {
-                ForEach(foodContainer.allEntries) { food in
+                ForEach(vm.allFood) { food in
                     NavigationLink(foodLabel(food)) {
-                        SingleFoodView(dc, food: food)
+                        SingleFoodView(vm.dc, food: food)
                     }
-                    //Price per each
                 }
             }
             
@@ -42,31 +45,30 @@ struct FoodContainerView: View {
             switch sortedBy {
             case .Restaurants:
                 Section(header: Text("All Restuarants")) {
-                    ForEach(foodContainer.allRestaurants) { restaurant in
+                    ForEach(vm.allRestaurants) { restaurant in
                         NavigationLink(restaurant.name) {
-                            SingleRestaurantView(dc: dc, restaurant)
+                            SingleRestaurantView(dc: vm.dc, restaurant)
                         }
                     }
                 }
             case .People:
                 Section(header: Text("All People")) {
-                    ForEach(foodContainer.allPeople) { person in
+                    ForEach(vm.allPeople) { person in
                         NavigationLink(person.name) {
-                            SinglePersonView(person: person)
+                            SinglePersonView(dc: vm.dc, person: person)
                         }
                     }
                 }
             }
         }
-        .navigationTitle(foodContainer.displayName)
+        .navigationTitle(vm.displayName)
+        
     }
     
     func foodLabel(_ food: Food) -> String {
-        "\(foodContainer.displayName) purchased by \(food.person?.name ?? "Unknown") at \(food.restaurantName) on \(food.date.formatted(date: .numeric, time: .omitted))"
+        "\(vm.displayName) purchased by \(food.person?.name ?? "Unknown") at \(food.restaurantName) on \(food.date.formatted(date: .numeric, time: .omitted))"
     }
 }
 
-enum FoodContainerSorted: String, CaseIterable {
-    case Restaurants = "Restaurants"
-    case People = "People"
-}
+
+

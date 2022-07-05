@@ -24,17 +24,16 @@ struct AllFoodView: View {
             List {
                 ForEach(vm.allFoodContainers) { foodContainer in
                     NavigationLink(foodContainer.displayName) {
-                        FoodContainerView(dc: vm.dc, foodContainer)
+                        FoodContainerView(dc: vm.dc, predicateStr: foodContainer.rawName)
                     }
                 }
-
             }
             .navigationTitle("All Food")
         }
     }
 }
 
-//MARK: Original Version of this View
+//MARK: Delete original when .onDelete Function is migrated to new view
 //struct AllFoodView: View {
 //    @StateObject var vm: AllFoodView_Model
 //    static let tag = "AllFood"

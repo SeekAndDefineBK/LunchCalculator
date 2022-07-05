@@ -8,23 +8,19 @@
 import SwiftUI
 
 struct SingleRestaurantView: View {
-    @ObservedObject var dc: DataController
-    @ObservedObject var restaurant: Restaurant
-    @State private var showingDeleteAlert = false
-    @State private var alertTitle = ""
-    @State private var alertMessage = ""
+    @StateObject var vm: SingleRestaurantView_Model
     
     init(dc: DataController, _ restaurant: Restaurant) {
-        _restaurant = ObservedObject(wrappedValue: restaurant)
-        _dc = ObservedObject(wrappedValue: dc)
+        let viewModel = SingleRestaurantView_Model(dc: dc, restaurant: restaurant)
+        _vm = StateObject(wrappedValue: viewModel)
     }
     
     var body: some View {
         List {
             Section(header: Text("All Receipts")) {
-                ForEach(restaurant.allReceipts) { receipt in
+                ForEach(vm.restaurant.allReceipts) { receipt in
                     NavigationLink {
-                        ReceiptView(dc: dc, receipt: receipt, restaurant: restaurant)
+                        ReceiptView(dc: vm.dc, receipt: receipt, restaurant: vm.restaurant)
                     } label: {
                         receipt.titleView
                     }
@@ -32,46 +28,42 @@ struct SingleRestaurantView: View {
             }
             
             Section(header: Text("All Food")) {
-                ForEach(restaurant.allFood) { food in
+                ForEach(vm.allFood) { food in
                     NavigationLink {
-                        SingleFoodView(dc, food: food)
+                        SingleFoodView(vm.dc, food: food)
                     } label: {
                         HStack {
-                            Text(food.name)
+                            Text("\(food.name) for \(food.personName) on \(food.date.formatted(date: .numeric, time: .omitted))")
                             
                             Spacer()
                             
                             Text("$\(food.cd_subtotal, specifier: "%.2f")")
                                 .bold()
                         }
-                        
                     }
+                }
+                .onDelete { offsets in
+                    vm.delete(offsets)
                 }
             }
             
             Button {
-              showingDeleteAlert = true
+                vm.showDeleteAlert()
             } label: {
                 Label("Delete Restaurant", systemImage: "trash.fill")
             }
             .foregroundColor(.red)
             
         }
-        .navigationTitle(restaurant.name)
-        .alert(alertTitle, isPresented: $showingDeleteAlert) {
+        .navigationTitle(vm.restaurant.name)
+        .alert(vm.alertTitle, isPresented: $vm.showingDeleteAlert) {
             Button(role: .destructive) {
-                dc.delete(restaurant)
+                vm.dc.delete(vm.restaurant)
             } label: {
                 Text("Yes")
             }
         } message: {
-            Text(alertMessage)
+            Text(vm.alertMessage)
         }
-    }
-    
-    func showDeleteAlert() {
-        alertTitle = "Delete \(restaurant.name)"
-        alertMessage = "Are you sure you want to delete \(restaurant.name)? This cannot be undone."
-        showingDeleteAlert = true
     }
 }

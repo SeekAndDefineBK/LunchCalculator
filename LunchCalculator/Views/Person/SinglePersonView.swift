@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct SinglePersonView: View {
+    var dc: DataController
     @ObservedObject var person: Person
     
     var body: some View {
@@ -18,12 +19,15 @@ struct SinglePersonView: View {
             
             Section(header: Text("All Food")) {
                 ForEach(person.allFood) { food in
-                    VStack(alignment: .leading) {
-                        Text("\(food.name) on \(food.date.formatted(date: .numeric, time: .omitted)) from \(food.restaurantName)")
-                        
-                        Text("Price: $\(food.total, specifier: "%.2f")")
-                    }
                     
+                    NavigationLink {
+                        SingleFoodView(dc, food: food)
+                    } label: {
+                        VStack(alignment: .leading) {
+                            Text(foodLabel(food))
+                            Text("Price: $\(food.total, specifier: "%.2f")")
+                        }
+                    }
                 }
             }
             
@@ -34,5 +38,9 @@ struct SinglePersonView: View {
             }
         }
         .navigationTitle(person.name)
+    }
+    
+    func foodLabel(_ food: Food) -> String {
+        "\(food.name) on \(food.date.formatted(date: .numeric, time: .omitted)) from \(food.restaurantName)"
     }
 }

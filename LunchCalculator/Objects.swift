@@ -91,8 +91,28 @@ extension Food {
         }
     }
     
+    var rawName: String {
+        cd_name ?? ""
+    }
+    
+    var personName: String {
+        person?.name ?? "Unknown person"
+    }
+    
     var total: Double {
         cd_subtotal
+    }
+    
+    var totalWithTax: Double {
+        total + tax
+    }
+    
+    private var subreceiptPercentage: Double {
+        total / (subreceipt?.totalDue ?? 0)
+    }
+    
+    var tax: Double {
+        (subreceipt?.splitTaxAmount ?? 0) * subreceiptPercentage
     }
     
     var date: Date {
@@ -110,63 +130,23 @@ extension Food {
     }
 }
 
+/// This is used in tandem with FoodContainerView to merge duplicate Food items into a single view.
+///  - id: Allows for Identifiable for ForEach Loop
+///  - rawName corresponds to the rawName value on the Food object. Ex this is the CoreData name or "" if nil
+///  - displayName is a friendly name displayed for the user
 struct FoodContainer: Identifiable {
     var id = UUID()
-    var name: String
+    var rawName: String
     var displayName: String {
-        if name == "" {
+        if rawName == "" {
             return "Unknown Foodname"
         } else {
-            return name
+            return rawName
         }
     }
-    var allEntries: [Food]
     
-    var allRestaurants: [Restaurant] {
-        var output = [Restaurant]()
-        
-        for i in allEntries {
-            if !output.contains(where: {i.restaurant == $0}) {
-                if let restaurant = i.restaurant {
-                    output.append(restaurant)
-                }
-            }
-        }
-        
-        return output
-    }
-    
-    var allPeople: [Person] {
-        var output = [Person]()
-        
-        for i in allEntries {
-            if !output.contains(where: {i.person == $0}) {
-                if let person = i.person {
-                    output.append(person)
-                }
-            }
-        }
-        
-        return output
-    }
-    
-    var totalSpent: Double {
-        allEntries.reduce(0) { $0 + $1.total }
-    }
-    
-    init(_ newEntry: [Food]) {
-        self.allEntries = newEntry
-        
-        
-        var newName: String {
-            if newEntry.isEmpty{
-                return "Unknown"
-            } else {
-                return newEntry[0].name
-            }
-        }
-
-        self.name = newName
+    init(_ food: Food) {
+        self.rawName = food.rawName
     }
 }
 

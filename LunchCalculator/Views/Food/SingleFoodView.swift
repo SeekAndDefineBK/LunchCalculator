@@ -10,7 +10,7 @@ import SwiftUI
 struct SingleFoodView: View {
     @Environment(\.dismiss) var dismiss
     @ObservedObject var food: Food
-    var dc: DataController
+    @ObservedObject var dc: DataController
     
     @State private var showingDeleteAlert = false
     @State private var alertTitle = ""
@@ -26,7 +26,9 @@ struct SingleFoodView: View {
             Text("\(food.restaurantName) on \(food.date.formatted(date: .numeric, time: .omitted))")
             Text("Purchased by: \(food.person?.name ?? "Unknown")")
             Text("Subtotal: $\(food.cd_subtotal, specifier: "%.2f")")
-            Text("Total: $\(food.subreceipt?.totalWithExtrasDue ?? 0, specifier: "%.2f")")
+            Text("Tax: \(food.tax, specifier: "%.2f")")
+            Text("Total: $\(food.totalWithTax, specifier: "%.2f")")
+                .bold()
             
             Section {
                 Button(role: .destructive) {

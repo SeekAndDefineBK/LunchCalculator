@@ -25,7 +25,7 @@ struct AllPeopleView: View {
                 ForEach(vm.allPeople) { person in
                     
                     NavigationLink(person.name) {
-                        SinglePersonView(person: person)
+                        SinglePersonView(dc: vm.dc, person: person)
                     }
                 }
                 .onDelete { offsets in
