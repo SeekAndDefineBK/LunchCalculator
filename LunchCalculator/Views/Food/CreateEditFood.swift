@@ -46,17 +46,12 @@ struct CreateEditFood: View {
                 .onDelete { offsets in
                     vm.delete(offsets)
                 }
+                
                 Button {
-                    vm.addNewFood()
+                    dismiss()
                 } label: {
-                    Label("Add Food", systemImage: "plus.circle")
+                    Label("Save Food", systemImage: "plus.circle")
                 }
-            }
-            
-            Button {
-                dismiss()
-            } label: {
-                Label("Save Food", systemImage: "plus.circle")
             }
         }
         .navigationTitle("\(vm.person.name)'s Food")

@@ -80,3 +80,22 @@ struct KeyboardButton: View {
     }
 }
 
+struct ReusableList<Content: View>: View {
+    
+    //MARK: input is expecting a Group that will be embedded into a list below
+    var input: Content
+    
+    init(_ input: () -> Content) {
+        self.input = input()
+    }
+    
+    var body : some View {
+        
+        List {
+            input
+                .listRowSeparator(.hidden)
+                .listRowBackground(Color.clear)
+        }
+        .listStyle(.plain)
+    }
+}

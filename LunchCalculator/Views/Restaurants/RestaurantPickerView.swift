@@ -20,24 +20,26 @@ struct RestaurantPickerView: View {
     }
     
     var body: some View {
-        List {
-            Section {
-                ForEach(vm.allRestaurants) { restaurant in
-                    Button {
-                        if selectedRestaurant == restaurant {
-                            selectedRestaurant = nil
-                        } else {
-                            selectedRestaurant = restaurant
+        ReusableList {
+            Group {
+                Section {
+                    ForEach(vm.allRestaurants) { restaurant in
+                        Button {
+                            if selectedRestaurant == restaurant {
+                                selectedRestaurant = nil
+                            } else {
+                                selectedRestaurant = restaurant
+                            }
+                        } label: {
+                            Label(restaurant.name, systemImage: selectedRestaurant == restaurant ? "checkmark" : "")
                         }
-                    } label: {
-                        Label(restaurant.name, systemImage: selectedRestaurant == restaurant ? "checkmark" : "")
                     }
-                }
-                
-                Button {
-                    selectedRestaurant = nil
-                } label: {
-                    Label("None", systemImage: selectedRestaurant == nil ? "checkmark" : "")
+                    
+                    Button {
+                        selectedRestaurant = nil
+                    } label: {
+                        Label("None", systemImage: selectedRestaurant == nil ? "checkmark" : "")
+                    }
                 }
             }
         }

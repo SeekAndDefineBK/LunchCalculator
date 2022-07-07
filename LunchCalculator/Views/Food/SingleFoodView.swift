@@ -36,7 +36,6 @@ struct SingleFoodView: View {
                 } label: {
                     Label("Delete Food", systemImage: "trash.fill")
                 }
-                .foregroundColor(.red)
             }
         }
         .navigationTitle(food.name)

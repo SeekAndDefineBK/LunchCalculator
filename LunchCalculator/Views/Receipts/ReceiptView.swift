@@ -27,64 +27,16 @@ struct ReceiptView: View {
             ReceiptFeesView(receipt: vm.receipt, tax: $vm.tax, tip: $vm.tip, fees: $vm.fees, save: vm.dc.save)
             
             ForEach(vm.receipt.allSubreceipts.sorted(by: {$0.personName < $1.personName})) { subreceipt in
-                Section {
-                    VStack(alignment: .trailing) {
-                        HStack {
-                            Text(subreceipt.person!.name)
-                                .font(.title)
-                                .bold()
-                            Spacer()
-                            Text("Total Due: \(vm.calculateSplit(subreceipt), specifier: "%.2f")")
-                                .bold()
-                        }
-                    }
-                    
-                    ForEach(subreceipt.allFood) { food in
-                        NavigationLink {
-                            CreateEditFood(dc: vm.dc, person: subreceipt.person!, food: subreceipt.allFood, subreceipt: subreceipt)
-                        } label: {
-                            VStack(alignment: .leading) {
-                                Text("Item: \(food.name)")
-                                    .font(.title3)
-
-                                Text("Menu Price: $\(food.cd_subtotal, specifier: "%.2f")")
-                                    .italic()
-                                    .padding(.leading, 10)
-                            }
-                            .font(.subheadline)
-                        }
-                    }
-                    
-                    Group {
-                        if vm.tax != 0 {
-                            Text("Tax: $\(vm.calculateTax(subreceipt), specifier: "%.2f")")
-                        }
-                        
-                        if vm.tip != 0 {
-                            Text("Tip: $\(vm.calculateTip(subreceipt), specifier: "%.2f")")
-                        }
-                        
-                        if vm.fees != 0 {
-                            Text("Service Fees: $\(vm.calculateFees(subreceipt), specifier: "%.2f")")
-                        }
-                    }
-                    .font(.subheadline)
-                    .padding(.leading, 10)
-
-                    
-                    NavigationLink {
-                        CreateEditFood(dc: vm.dc, person: subreceipt.person!, food: subreceipt.allFood, subreceipt: subreceipt)
-                    } label: {
-                        Label("Add Food", systemImage: "plus.circle")
-                    }
-                    
-                    Button {
+                SubreceiptView(
+                    dc: vm.dc,
+                    subreceipt: subreceipt,
+                    totalDue: vm.calculateSplit(subreceipt),
+                    tax: vm.calculateTax(subreceipt),
+                    tip: vm.calculateTip(subreceipt),
+                    fees: vm.calculateFees(subreceipt)) {
+                        //this is assigned to askToRemoveAction
                         vm.askToRemove(subreceipt: subreceipt)
-                    } label: {
-                        Label("Remove from receipt", systemImage: "x.circle")
                     }
-                    .foregroundColor(.red)
-                }
             }
         
             NavigationLink {
@@ -101,6 +53,8 @@ struct ReceiptView: View {
             .foregroundColor(.red)
 
         }
+        
+        
         .navigationTitle(vm.restaurant.name)
         .alert(vm.alertTitle, isPresented: $vm.showingRemovePersonAlert) {
             

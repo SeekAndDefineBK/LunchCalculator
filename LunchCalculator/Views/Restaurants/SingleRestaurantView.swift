@@ -52,8 +52,6 @@ struct SingleRestaurantView: View {
             } label: {
                 Label("Delete Restaurant", systemImage: "trash.fill")
             }
-            .foregroundColor(.red)
-            
         }
         .navigationTitle(vm.restaurant.name)
         .alert(vm.alertTitle, isPresented: $vm.showingDeleteAlert) {

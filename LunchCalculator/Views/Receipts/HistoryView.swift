@@ -17,28 +17,42 @@ struct HistoryView: View {
     }
     var body: some View {
         NavigationView {
-            List {
-                Section {
+            ReusableList{
+                Group {
+                    NavigationLink {
+                        SelectRestaurantView(dc: vm.dc)
+                    } label: {
+                        Label("Create Receipt", systemImage: "plus.circle")
+                    }
+                    
+                    Section(header: Text("All Receipts")) {
+                        ForEach(vm.allReceipts) { receipt in
+                            NavigationLink {
+                                //TODO: Is is possible for restaurant to be nil?
+                                ReceiptView(dc: vm.dc, receipt: receipt, restaurant: receipt.restaurant!)
+                            } label: {
+                                Text(receipt.title)
+                            }
+
+                        }
+                        .onDelete { offset in
+                            vm.delete(offset)
+                        }
+                    }
+                    
+                }
+            }
+            .navigationTitle("Receipt History")
+            .toolbar {
+                ToolbarItemGroup(placement: .navigationBarTrailing) {
                     NavigationLink {
                         SelectRestaurantView(dc: vm.dc)
                     } label: {
                         Label("Create Receipt", systemImage: "plus.circle")
                     }
                 }
-                
-                ForEach(vm.allReceipts) { receipt in
-                    NavigationLink {
-                        //TODO: Is is possible for restaurant to be nil?
-                        ReceiptView(dc: vm.dc, receipt: receipt, restaurant: receipt.restaurant!)
-                    } label: {
-                        Text(receipt.title)
-                    }
-                }
-                .onDelete { offset in
-                    vm.delete(offset)
-                }
             }
-            .navigationTitle("Receipt History")
+            
         }
     }
 }

@@ -21,15 +21,17 @@ struct AllPeopleView: View {
     
     var body: some View {
         NavigationView {
-            List {
-                ForEach(vm.allPeople) { person in
-                    
-                    NavigationLink(person.name) {
-                        SinglePersonView(dc: vm.dc, person: person)
+            ReusableList {
+                Group {
+                    ForEach(vm.allPeople) { person in
+                        NavigationLink(person.name) {
+                            SinglePersonView(dc: vm.dc, person: person)
+                        }
+
                     }
-                }
-                .onDelete { offsets in
-                    vm.delete(offsets)
+                    .onDelete { offsets in
+                        vm.delete(offsets)
+                    }
                 }
             }
             .navigationTitle("All People")

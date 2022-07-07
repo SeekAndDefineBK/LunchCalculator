@@ -18,6 +18,7 @@
 		401F31C9285D27A2005C3806 /* CreatePersonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401F31C8285D27A2005C3806 /* CreatePersonView.swift */; };
 		401F31CB285D27C5005C3806 /* Objects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401F31CA285D27C5005C3806 /* Objects.swift */; };
 		401F31CD285D27E0005C3806 /* ThemeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401F31CC285D27E0005C3806 /* ThemeModel.swift */; };
+		4025420228767BDD007074F6 /* SubreceiptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4025420128767BDD007074F6 /* SubreceiptView.swift */; };
 		404D45C8285E0F9900BBA36E /* Main.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 404D45C6285E0F9900BBA36E /* Main.xcdatamodeld */; };
 		404D45CA285E12F300BBA36E /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 404D45C9285E12F300BBA36E /* DataController.swift */; };
 		404D45CC285E151D00BBA36E /* CreateEditFood_Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 404D45CB285E151D00BBA36E /* CreateEditFood_Model.swift */; };
@@ -80,6 +81,7 @@
 		401F31C8285D27A2005C3806 /* CreatePersonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePersonView.swift; sourceTree = "<group>"; };
 		401F31CA285D27C5005C3806 /* Objects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Objects.swift; sourceTree = "<group>"; };
 		401F31CC285D27E0005C3806 /* ThemeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeModel.swift; sourceTree = "<group>"; };
+		4025420128767BDD007074F6 /* SubreceiptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubreceiptView.swift; sourceTree = "<group>"; };
 		404D45C7285E0F9900BBA36E /* Main.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Main.xcdatamodel; sourceTree = "<group>"; };
 		404D45C9285E12F300BBA36E /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		404D45CB285E151D00BBA36E /* CreateEditFood_Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateEditFood_Model.swift; sourceTree = "<group>"; };
@@ -245,6 +247,7 @@
 				405A87DC285EC978004D1DB5 /* HistoryView_Model.swift */,
 				401F319D285D165E005C3806 /* ReceiptView.swift */,
 				405A87D4285E34CF004D1DB5 /* ReceiptView_Model.swift */,
+				4025420128767BDD007074F6 /* SubreceiptView.swift */,
 			);
 			path = Receipts;
 			sourceTree = "<group>";
@@ -409,6 +412,7 @@
 				404D45CE285E219000BBA36E /* CreatePersonView_Model.swift in Sources */,
 				40F16FF52865271600141F0E /* AllPeopleView.swift in Sources */,
 				406BA64D286D37160065BA92 /* AllRestaurantsView_Model.swift in Sources */,
+				4025420228767BDD007074F6 /* SubreceiptView.swift in Sources */,
 				40D343672873C7C0003A0173 /* FoodContainerView_Model.swift in Sources */,
 				406BA64F286D386B0065BA92 /* SingleRestaurantView.swift in Sources */,
 				406BA647286D2A0D0065BA92 /* RestaurantPickerView.swift in Sources */,

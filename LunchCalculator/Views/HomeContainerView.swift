@@ -6,14 +6,29 @@
 //
 
 import SwiftUI
+import UIKit
 
 struct HomeContainerView: View {
     @StateObject var vm: HomeContainerView_Model
     @SceneStorage("tag") var tag: String = "1"
     
+    let coloredNavAppearance = UINavigationBarAppearance()
+
+    
     init(dc: DataController) {
         let viewModel = HomeContainerView_Model(dc: dc)
         _vm = StateObject(wrappedValue: viewModel)
+        
+        UITabBar.appearance().isOpaque = false
+        
+        coloredNavAppearance.configureWithOpaqueBackground()
+        coloredNavAppearance.backgroundColor = UIColor(Color.mint)
+        coloredNavAppearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+        coloredNavAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+               
+        UINavigationBar.appearance().standardAppearance = coloredNavAppearance
+        UINavigationBar.appearance().scrollEdgeAppearance = coloredNavAppearance
+        UINavigationBar.appearance().tintColor = .white
     }
     
     var body: some View {
@@ -48,5 +63,6 @@ struct HomeContainerView: View {
                     Label("Settings", systemImage: "gear")
                 }
         }
+        .accentColor(.mint)
     }
 }

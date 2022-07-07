@@ -21,13 +21,18 @@ struct AllFoodView: View {
 
     var body: some View {
         NavigationView {
-            List {
-                ForEach(vm.allFoodContainers) { foodContainer in
-                    NavigationLink(foodContainer.displayName) {
-                        FoodContainerView(dc: vm.dc, predicateStr: foodContainer.rawName)
+            ReusableList {
+                Group {
+                    ForEach(vm.allFoodContainers) { foodContainer in
+                        
+                        NavigationLink(foodContainer.displayName) {
+                            FoodContainerView(dc: vm.dc, predicateStr: foodContainer.rawName)
+                        }
+
                     }
                 }
             }
+
             .navigationTitle("All Food")
         }
     }
