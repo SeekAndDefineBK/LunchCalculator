@@ -16,7 +16,6 @@ struct SelectPersonView: View {
     //TODO: Convert person to array of Person to allow multiple selection
     @State private var allPeople: [Person]
     @State private var showingAddPerson = false
-    @State private var newFoods: [FoodData] = []
     
     init(dc: DataController, receipt: Receipt, restaurant: Restaurant) {
         self.dc = dc
@@ -59,8 +58,6 @@ struct SelectPersonView: View {
                     Text("Done")
                 }
             }
-            
-            
         }
     }
     

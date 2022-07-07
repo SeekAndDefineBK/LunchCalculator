@@ -43,6 +43,9 @@ struct CreateEditFood: View {
                         assignFocus(food)
                     }
                 }
+                .onDelete { offsets in
+                    vm.delete(offsets)
+                }
                 Button {
                     vm.addNewFood()
                 } label: {
@@ -56,14 +59,8 @@ struct CreateEditFood: View {
                 Label("Save Food", systemImage: "plus.circle")
             }
         }
+        .navigationTitle("\(vm.person.name)'s Food")
         .alert(vm.alertTitle, isPresented: $vm.showingDeleteAlert) {
-            
-            Button(role: .cancel) {
-                //
-            } label: {
-                Text("Cancel")
-            }
-
             Button(role: .destructive) {
                 dismiss()
             } label: {
@@ -72,7 +69,6 @@ struct CreateEditFood: View {
         } message: {
             Text(vm.alertMessage)
         }
-        .navigationTitle("Add Food")
         .alert(alertTitle, isPresented: $showingDeleteAlert) {
             Button(role: .destructive) {
                 withAnimation {
@@ -105,6 +101,12 @@ struct CreateEditFood: View {
                 }
                 
                 Spacer()
+                
+                Button {
+                    vm.addNewFood()
+                } label: {
+                    Label("Add Food", systemImage: "plus.circle")
+                }
                 
                 Button {
                     focused = nil

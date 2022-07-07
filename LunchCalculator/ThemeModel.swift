@@ -23,10 +23,18 @@ struct DoubleFieldHStack: View {
     var rs: LocalizedStringKey
     @Binding var ls: Double
     
+    var numberFormatter: NumberFormatter {
+        let output = NumberFormatter()
+        
+        output.roundingMode = .down
+        
+        return output
+    }
+    
     var body: some View {
         HStack {
             Text(rs)
-            TextField("Price", value: $ls, formatter: NumberFormatter())
+            TextField("Price", value: $ls, format: .number)
                 .keyboardType(.decimalPad)
         }
     }

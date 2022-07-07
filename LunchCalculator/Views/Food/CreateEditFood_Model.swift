@@ -50,5 +50,13 @@ extension CreateEditFood {
             allFood.append(newFood)
             
         }
+        
+        func delete(_ offsets: IndexSet) {
+            for offset in offsets {
+                let food = allFood[offset]
+                dc.delete(food)
+                allFood.remove(at: offset)
+            }
+        }
     }
 }

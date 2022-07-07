@@ -48,9 +48,6 @@ struct CreatePersonView: View {
                     Label("Save", systemImage: "plus.circle")
                 }
 
-//                if person != nil && subreceipt != nil{
-//                    CreateEditFood(dc: vm.dc, person: person!, food: person!.allFood, subreceipt: subreceipt!)
-//                }
             }
         }
         .alert(vm.alertTitle, isPresented: $vm.showingQCAlert) {
@@ -64,12 +61,4 @@ struct CreatePersonView: View {
             Text(vm.alertMessage)
         }
     }
-    
-//    func deleteFood(_ food: Food) {
-//        vm.person?.objectWillChange.send()
-//
-//        allFood.removeAll(where: {$0.id == food.id})
-//
-//        vm.dc.delete(food)
-//    }
 }

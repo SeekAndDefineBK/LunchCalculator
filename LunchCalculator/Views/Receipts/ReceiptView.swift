@@ -34,7 +34,7 @@ struct ReceiptView: View {
                                 .font(.title)
                                 .bold()
                             Spacer()
-                            Text("Total Due: \(calculateSplit(subreceipt), specifier: "%.2f")")
+                            Text("Total Due: \(vm.calculateSplit(subreceipt), specifier: "%.2f")")
                                 .bold()
                         }
                     }
@@ -57,15 +57,15 @@ struct ReceiptView: View {
                     
                     Group {
                         if vm.tax != 0 {
-                            Text("Tax: $\(calculateTax(subreceipt), specifier: "%.2f")")
+                            Text("Tax: $\(vm.calculateTax(subreceipt), specifier: "%.2f")")
                         }
                         
                         if vm.tip != 0 {
-                            Text("Tip: $\(calculateTip(subreceipt), specifier: "%.2f")")
+                            Text("Tip: $\(vm.calculateTip(subreceipt), specifier: "%.2f")")
                         }
                         
                         if vm.fees != 0 {
-                            Text("Service Fees: $\(calculateFees(subreceipt), specifier: "%.2f")")
+                            Text("Service Fees: $\(vm.calculateFees(subreceipt), specifier: "%.2f")")
                         }
                     }
                     .font(.subheadline)
@@ -77,6 +77,13 @@ struct ReceiptView: View {
                     } label: {
                         Label("Add Food", systemImage: "plus.circle")
                     }
+                    
+                    Button {
+                        vm.askToRemove(subreceipt: subreceipt)
+                    } label: {
+                        Label("Remove from receipt", systemImage: "x.circle")
+                    }
+                    .foregroundColor(.red)
                 }
             }
         
@@ -95,11 +102,33 @@ struct ReceiptView: View {
 
         }
         .navigationTitle(vm.restaurant.name)
+        .toolbar(content: {
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
+                Button {
+                    dismiss()
+                } label: {
+                    Label("Save", systemImage: "plus.circle")
+                }
+
+            }
+        })
+        .alert(vm.alertTitle, isPresented: $vm.showingRemovePersonAlert) {
+            
+            Button(role: .destructive) {
+                withAnimation {
+                    vm.removePersonAction()
+                }
+            } label: {
+                Text("Yes, Remove")
+            }
+
+        } message: {
+            Text(vm.alertMessage)
+        }
         .alert(vm.alertTitle, isPresented: $vm.showingDeleteAlert) {
             
             Button(role: .destructive) {
                 vm.dc.delete(vm.receipt)
-                dismiss()
             } label: {
                 Text("Yes, Delete")
             }
@@ -112,32 +141,6 @@ struct ReceiptView: View {
             vm.restaurant.objectWillChange.send()
             vm.receipt.objectWillChange.send()
         }
-    }
-    
-    func calculateSplit(_ subreceipt: Subreceipt) -> Double {
-        let tax = calculateTax(subreceipt)
-        let tip = calculateTip(subreceipt)
-        let fees = calculateFees(subreceipt)
-        
-        return subreceipt.totalDue + tax + tip + fees
-    }
-    
-    func calculateTip(_ subreceipt: Subreceipt) -> Double {
-        let percentageOfTip = subreceipt.totalDue / vm.receipt.subtotal
-        
-        return vm.tip * percentageOfTip
-    }
-    
-    func calculateTax(_ subreceipt: Subreceipt) -> Double {
-        let percentageOfTax = subreceipt.totalDue / vm.receipt.subtotal
-        
-        return vm.tax * percentageOfTax
-    }
-    
-    func calculateFees(_ subreceipt: Subreceipt) -> Double {
-        let percentageOfFees = subreceipt.totalDue / vm.receipt.subtotal
-        
-        return vm.fees * percentageOfFees
     }
 }
 
