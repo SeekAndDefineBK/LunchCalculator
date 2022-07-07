@@ -11,8 +11,8 @@ struct CreatePersonView: View {
     @Environment(\.dismiss) var dismiss
     @StateObject var vm: CreatePersonView_Model
     
-    init(dc: DataController, person: Person? = nil, receipt: Receipt, restaurant: Restaurant, onSaveAction: @escaping () -> Void) {
-        let viewModel = CreatePersonView_Model(dc: dc, person: person, onSaveAction: onSaveAction)
+    init(dc: DataController, person: Person? = nil, receipt: Receipt, restaurant: Restaurant, onDisplay: Binding<Bool>) {
+        let viewModel = CreatePersonView_Model(dc: dc, person: person, onDisplay: onDisplay)
         _vm = StateObject(wrappedValue: viewModel)
         self.receipt = receipt
         self.restaurant = restaurant
@@ -33,20 +33,15 @@ struct CreatePersonView: View {
                 TextFieldHStack(rs: "Name", ls: $vm.personData.name)
                             
                 Button {
-                    //TODO: Do not create without a name value
-                    if vm.personData.name ==  "" {
-                        vm.onSaveAction()
-                    } else {
-                        withAnimation {
-                            person = vm.dc.createEditPerson(nil, personData: vm.personData)
-                            vm.personData.name = ""
-                        }
+                    withAnimation {
+                        person = vm.dc.createEditPerson(nil, personData: vm.personData)
+                        vm.personData.name = ""
+                        vm.onDisplay = false
                     }
-                    
-                    
                 } label: {
-                    Label("Save", systemImage: "plus.circle")
+                    Label("Done", systemImage: "plus.circle")
                 }
+                .disabled(vm.personData.name == "")
 
             }
         }

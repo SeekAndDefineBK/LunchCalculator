@@ -44,24 +44,26 @@ struct SelectPersonView: View {
                     }
                     
                     Button {
+                        showingAddPerson = false
                         saveAction()
                     } label: {
                         Label("Save", systemImage: "plus.circle")
                     }
                 }
             } else {
-                CreatePersonView(dc: dc, receipt: receipt, restaurant: restaurant, onSaveAction: saveAction)
+                CreatePersonView(dc: dc, receipt: receipt, restaurant: restaurant, onDisplay: $showingAddPerson)
                 
-                Button {
-                    saveAction()
-                } label: {
-                    Text("Done")
-                }
+//                Button {
+//                    showingAddPerson = false
+//                    saveAction()
+//                } label: {
+//                    Text("Done")
+//                }
             }
         }
     }
     
-    func saveAction() {
+    func saveAction() {        
         for person in allPeople {
             dc.addPersonToReceipt(person, receipt: receipt)
         }

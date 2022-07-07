@@ -26,7 +26,7 @@ struct ReceiptView: View {
         List {
             ReceiptFeesView(receipt: vm.receipt, tax: $vm.tax, tip: $vm.tip, fees: $vm.fees, save: vm.dc.save)
             
-            ForEach(vm.receipt.allSubreceipts) { subreceipt in
+            ForEach(vm.receipt.allSubreceipts.sorted(by: {$0.personName < $1.personName})) { subreceipt in
                 Section {
                     VStack(alignment: .trailing) {
                         HStack {
@@ -102,16 +102,6 @@ struct ReceiptView: View {
 
         }
         .navigationTitle(vm.restaurant.name)
-        .toolbar(content: {
-            ToolbarItemGroup(placement: .navigationBarTrailing) {
-                Button {
-                    dismiss()
-                } label: {
-                    Label("Save", systemImage: "plus.circle")
-                }
-
-            }
-        })
         .alert(vm.alertTitle, isPresented: $vm.showingRemovePersonAlert) {
             
             Button(role: .destructive) {

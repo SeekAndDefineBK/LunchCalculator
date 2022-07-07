@@ -6,13 +6,14 @@
 //
 
 import Foundation
+import SwiftUI
 
 extension CreatePersonView {
     class CreatePersonView_Model: ObservableObject {
         var dc: DataController
         
         var person: Person?
-        let onSaveAction: () -> Void
+        @Binding var onDisplay: Bool
         
         @Published var personData = PersonData.blank
         
@@ -20,10 +21,10 @@ extension CreatePersonView {
         @Published var alertTitle = ""
         @Published var alertMessage = ""
     
-        init(dc: DataController, person: Person? = nil, onSaveAction: @escaping () -> Void) {
+        init(dc: DataController, person: Person? = nil, onDisplay: Binding<Bool>) {
             self.dc = dc
             self.person = person
-            self.onSaveAction = onSaveAction
+            _onDisplay = onDisplay
             
             if person != nil {
                 _personData = Published(wrappedValue: PersonData(

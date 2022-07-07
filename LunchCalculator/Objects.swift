@@ -160,6 +160,10 @@ extension Subreceipt {
         return allFood.reduce(0) { $0 + $1.total}
     }
     
+    var personName: String {
+        person?.name ?? "Unknown Person"
+    }
+    
 
     var restaurantName: String {
         receipt?.restaurantName ?? "Unknown Restaurant"
