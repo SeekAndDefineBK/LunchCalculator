@@ -45,25 +45,19 @@ struct ReceiptView: View {
                 Label("Add Person", systemImage: "person.crop.circle.fill.badge.plus")
             }
             
-            Button {
+            ThemedButton(.deleteReceipt) {
                 vm.askToDelete()
-            } label: {
-                Label("Delete Receipt", systemImage: "trash.fill")
             }
-            .foregroundColor(.red)
-
         }
         
         
         .navigationTitle(vm.restaurant.name)
         .alert(vm.alertTitle, isPresented: $vm.showingRemovePersonAlert) {
             
-            Button(role: .destructive) {
+            ThemedButton(.removePerson) {
                 withAnimation {
                     vm.removePersonAction()
                 }
-            } label: {
-                Text("Yes, Remove")
             }
 
         } message: {
@@ -71,10 +65,8 @@ struct ReceiptView: View {
         }
         .alert(vm.alertTitle, isPresented: $vm.showingDeleteAlert) {
             
-            Button(role: .destructive) {
+            ThemedButton(.deleteReceipt) {
                 vm.dc.delete(vm.receipt)
-            } label: {
-                Text("Yes, Delete")
             }
 
         } message: {
@@ -125,10 +117,8 @@ struct ReceiptFeesView: View {
                         switchFocus(.next)
                     }
                     
-                    Button {
+                    ThemedButton(.done) {
                         focused = nil
-                    } label: {
-                        Label("Done", systemImage: "checkmark.circle.fill")
                     }
                 }
             }

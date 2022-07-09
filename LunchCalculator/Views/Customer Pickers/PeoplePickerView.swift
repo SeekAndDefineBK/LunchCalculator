@@ -27,6 +27,8 @@ struct PeoplePickerView: View {
     var body: some View {
         List {
             ForEach(vm.allPeople) { person in
+                
+                
                 Button {
                     if selectedPeople.contains(person) {
                         selectedPeople.removeAll(where: {$0 == person})
@@ -36,6 +38,7 @@ struct PeoplePickerView: View {
                 } label: {
                     Label(person.name, systemImage: updateSelectedDisplay(person) ? "checkmark" : "")
                         .foregroundColor(.black)
+                        .accessibilityHint(updateSelectedDisplay(person) ? "selected \(person.name)" : "unselected \(person.name)")
                 }
                 .disabled(disableUnselect(person))
             }

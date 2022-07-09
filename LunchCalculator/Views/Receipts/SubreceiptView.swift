@@ -80,12 +80,9 @@ struct SubreceiptView: View {
                 Label("Add Food", systemImage: "plus.circle")
             }
             
-            Button {
+            ThemedButton(.removePerson) {
                 askToRemoveAction()
-            } label: {
-                Label("Remove from receipt", systemImage: "x.circle")
             }
-            .foregroundColor(.red)
         }
 
     }

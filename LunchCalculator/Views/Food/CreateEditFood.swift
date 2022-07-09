@@ -47,30 +47,27 @@ struct CreateEditFood: View {
                     vm.delete(offsets)
                 }
                 
-                Button {
+                ThemedButton(.saveFood) {
                     dismiss()
-                } label: {
-                    Label("Save Food", systemImage: "plus.circle")
                 }
             }
         }
         .navigationTitle("\(vm.person.name)'s Food")
         .alert(vm.alertTitle, isPresented: $vm.showingDeleteAlert) {
-            Button(role: .destructive) {
+            
+            ThemedButton(.delete) {
                 dismiss()
-            } label: {
-                Text("Delete")
             }
+            
         } message: {
             Text(vm.alertMessage)
         }
         .alert(alertTitle, isPresented: $showingDeleteAlert) {
-            Button(role: .destructive) {
+            
+            ThemedButton(.delete) {
                 withAnimation {
                     deleteAction(vm.allFood[focusedIndex])
                 }
-            } label: {
-                Text("Yes")
             }
 
         } message: {
@@ -88,27 +85,19 @@ struct CreateEditFood: View {
                 
                 Spacer()
                 
-                Button {
+                ThemedButton(.delete) {
                     showDeleteAlert()
-                } label: {
-                    Label("Delete", systemImage: "trash.fill")
-                        .foregroundColor(.red)
                 }
                 
                 Spacer()
-                
-                Button {
-                    vm.addNewFood()
-                } label: {
-                    Label("Add Food", systemImage: "plus.circle")
-                }
-                
-                Button {
-                    focused = nil
-                } label: {
-                    Label("Done", systemImage: "checkmark.circle.fill")
-                }
 
+                ThemedButton(.addFood) {
+                    vm.addNewFood()
+                }
+                
+                ThemedButton(.done) {
+                    focused = nil
+                }
             }
         }
     }

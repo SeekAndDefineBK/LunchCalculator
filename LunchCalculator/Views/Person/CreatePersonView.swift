@@ -31,27 +31,19 @@ struct CreatePersonView: View {
         List {
             Section {
                 TextFieldHStack(rs: "Name", ls: $vm.personData.name)
-                            
-                Button {
+                    
+                ThemedButton(.done) {
                     withAnimation {
                         person = vm.dc.createEditPerson(nil, personData: vm.personData)
                         vm.personData.name = ""
                         vm.onDisplay = false
                     }
-                } label: {
-                    Label("Done", systemImage: "plus.circle")
                 }
                 .disabled(vm.personData.name == "")
-
             }
         }
         .alert(vm.alertTitle, isPresented: $vm.showingQCAlert) {
-            Button {
-                //
-            } label: {
-                Text("Okay")
-            }
-
+            ThemedButton(.okay) {  }
         } message: {
             Text(vm.alertMessage)
         }

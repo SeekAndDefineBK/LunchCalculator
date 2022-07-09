@@ -31,20 +31,19 @@ struct SingleFoodView: View {
                 .bold()
             
             Section {
-                Button(role: .destructive) {
+                
+                ThemedButton(.deleteFood) {
                     triggerDeleteAlert()
-                } label: {
-                    Label("Delete Food", systemImage: "trash.fill")
                 }
+
             }
         }
         .navigationTitle(food.name)
         .alert(alertTitle, isPresented: $showingDeleteAlert) {
-            Button(role: .destructive) {
+            
+            ThemedButton(.delete) {
                 dc.delete(food)
                 dismiss()
-            } label: {
-                Text("Delete")
             }
 
         } message: {

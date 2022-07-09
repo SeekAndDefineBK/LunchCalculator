@@ -19,16 +19,16 @@ struct HomeContainerView: View {
         let viewModel = HomeContainerView_Model(dc: dc)
         _vm = StateObject(wrappedValue: viewModel)
         
-        UITabBar.appearance().isOpaque = false
+//        UITabBar.appearance().isOpaque = true
         
-        coloredNavAppearance.configureWithOpaqueBackground()
-        coloredNavAppearance.backgroundColor = UIColor(Color.mint)
-        coloredNavAppearance.titleTextAttributes = [.foregroundColor: UIColor.white]
-        coloredNavAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+//        coloredNavAppearance.configureWithOpaqueBackground()
+//        coloredNavAppearance.backgroundColor = UIColor(Color.mint)
+//        coloredNavAppearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+//        coloredNavAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
                
-        UINavigationBar.appearance().standardAppearance = coloredNavAppearance
-        UINavigationBar.appearance().scrollEdgeAppearance = coloredNavAppearance
-        UINavigationBar.appearance().tintColor = .white
+//        UINavigationBar.appearance().standardAppearance = coloredNavAppearance
+//        UINavigationBar.appearance().scrollEdgeAppearance = coloredNavAppearance
+//        UINavigationBar.appearance().tintColor = .white
     }
     
     var body: some View {

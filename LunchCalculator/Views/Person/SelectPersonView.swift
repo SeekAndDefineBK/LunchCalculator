@@ -35,30 +35,19 @@ struct SelectPersonView: View {
             //And hide SelectPersonView Save button, because the CreatePersonView Save button will now handle saving
             if !showingAddPerson {
                 Section {
-                    Button {
+                    ThemedButton(.createPerson) {
                         withAnimation {
                             showingAddPerson = true
                         }
-                    } label: {
-                        Label("Create Person", systemImage: "person.crop.circle.fill.badge.plus")
                     }
                     
-                    Button {
+                    ThemedButton(.save) {
                         showingAddPerson = false
                         saveAction()
-                    } label: {
-                        Label("Save", systemImage: "plus.circle")
                     }
                 }
             } else {
                 CreatePersonView(dc: dc, receipt: receipt, restaurant: restaurant, onDisplay: $showingAddPerson)
-                
-//                Button {
-//                    showingAddPerson = false
-//                    saveAction()
-//                } label: {
-//                    Text("Done")
-//                }
             }
         }
     }

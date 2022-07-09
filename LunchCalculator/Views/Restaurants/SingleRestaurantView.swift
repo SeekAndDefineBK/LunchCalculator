@@ -47,19 +47,18 @@ struct SingleRestaurantView: View {
                 }
             }
             
-            Button {
+            ThemedButton(.deleteRestaurant) {
                 vm.showDeleteAlert()
-            } label: {
-                Label("Delete Restaurant", systemImage: "trash.fill")
             }
+            
         }
         .navigationTitle(vm.restaurant.name)
         .alert(vm.alertTitle, isPresented: $vm.showingDeleteAlert) {
-            Button(role: .destructive) {
+            
+            ThemedButton(.delete) {
                 vm.dc.delete(vm.restaurant)
-            } label: {
-                Text("Yes")
             }
+            
         } message: {
             Text(vm.alertMessage)
         }

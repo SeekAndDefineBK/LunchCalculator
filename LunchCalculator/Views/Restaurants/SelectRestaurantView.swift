@@ -65,10 +65,8 @@ struct SelectRestaurantView: View {
                     }
                 }
                 
-                Button {
+                ThemedButton(.save) {
                     withAnimation { updateRestaurant() }
-                } label: {
-                    Label("Save", systemImage: "plus.circle")
                 }
             }
         }
@@ -146,10 +144,8 @@ struct CreateRestaurantView: View {
                         switchFocus(.next)
                     }
                     
-                    Button {
+                    ThemedButton(.done) {
                         focused = nil
-                    } label: {
-                        Label("Done", systemImage: "checkmark.circle.fill")
                     }
                 }
             }

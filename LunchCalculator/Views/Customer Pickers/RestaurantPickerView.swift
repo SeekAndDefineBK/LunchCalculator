@@ -20,8 +20,7 @@ struct RestaurantPickerView: View {
     }
     
     var body: some View {
-        ReusableList {
-            Group {
+            List {
                 Section {
                     ForEach(vm.allRestaurants) { restaurant in
                         Button {
@@ -32,6 +31,7 @@ struct RestaurantPickerView: View {
                             }
                         } label: {
                             Label(restaurant.name, systemImage: selectedRestaurant == restaurant ? "checkmark" : "")
+                                .accessibilityHint(selectedRestaurant == restaurant ? "selected \(restaurant.name)" : "unselected \(restaurant.name)")
                         }
                     }
                     
@@ -39,9 +39,10 @@ struct RestaurantPickerView: View {
                         selectedRestaurant = nil
                     } label: {
                         Label("None", systemImage: selectedRestaurant == nil ? "checkmark" : "")
+                            .accessibilityHint("No restaurant selected")
+                        
                     }
                 }
             }
-        }
     }
 }

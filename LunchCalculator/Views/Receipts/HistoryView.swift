@@ -31,7 +31,28 @@ struct HistoryView: View {
                                 //TODO: Is is possible for restaurant to be nil?
                                 ReceiptView(dc: vm.dc, receipt: receipt, restaurant: receipt.restaurant!)
                             } label: {
-                                Text(receipt.title)
+                                PreviewCell {
+                                    VStack(alignment: .leading) {
+                                        HStack {
+                                            Text(receipt.restaurantName)
+                                                .font(.title3)
+                                                .bold()
+                                                .italic()
+                                                                                    
+                                            Text("on \(receipt.date.formatted(date: .numeric, time: .omitted))")
+                                        }
+                                        
+                                        HStack {
+                                            Text(receipt.allNames)
+                                            Spacer()
+                                            Text("$\(receipt.total, specifier: "%.2f")")
+                                                .bold()
+                                                .italic()
+                                            
+                                        }
+                                    }
+                                    
+                                }
                             }
 
                         }

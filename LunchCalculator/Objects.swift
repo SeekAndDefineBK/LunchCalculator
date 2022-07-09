@@ -31,6 +31,23 @@ extension Receipt {
         return output
     }
     
+    var allNames: String {
+        var output = ""
+        
+        for i in allPeople {
+            output += i.name
+            
+            if let index = allPeople.firstIndex(of: i) {
+                if index != allPeople.count - 1 {
+                    output += ", "
+                } 
+            }
+            
+        }
+        
+        return output
+    }
+    
     var allSubreceipts: [Subreceipt] {
         let arr = subreceipts?.allObjects as? [Subreceipt] ?? []
         return arr
