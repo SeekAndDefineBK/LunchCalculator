@@ -16,41 +16,41 @@ struct SingleRestaurantView: View {
     }
     
     var body: some View {
-        List {
-            Section(header: Text("All Receipts")) {
-                ForEach(vm.restaurant.allReceipts) { receipt in
-                    NavigationLink {
-                        ReceiptView(dc: vm.dc, receipt: receipt, restaurant: vm.restaurant)
-                    } label: {
-                        receipt.titleView
-                    }
-                }
-            }
-            
-            Section(header: Text("All Food")) {
-                ForEach(vm.allFood) { food in
-                    NavigationLink {
-                        SingleFoodView(vm.dc, food: food)
-                    } label: {
-                        HStack {
-                            Text("\(food.name) for \(food.personName) on \(food.date.formatted(date: .numeric, time: .omitted))")
-                            
-                            Spacer()
-                            
-                            Text("$\(food.cd_subtotal, specifier: "%.2f")")
-                                .bold()
+        ReusableList {
+            Group {
+                Section(header: Text("All Receipts")) {
+                    ForEach(vm.restaurant.allReceipts) { receipt in
+                        NavigationLink {
+                            ReceiptView(dc: vm.dc, receipt: receipt, restaurant: vm.restaurant)
+                        } label: {
+                            ReceiptCell(receipt: receipt)
                         }
                     }
                 }
-                .onDelete { offsets in
-                    vm.delete(offsets)
+                
+                Section(header: Text("All Food")) {
+                    ForEach(vm.allFood) { food in
+                        NavigationLink {
+                            SingleFoodView(vm.dc, food: food)
+                        } label: {
+                            FoodCell(food: food)
+                        }
+                    }
+                    .onDelete { offsets in
+                        vm.delete(offsets)
+                    }
                 }
-            }
             
-            ThemedButton(.deleteRestaurant) {
-                vm.showDeleteAlert()
+                HStack {
+                    Spacer()
+                    ThemedButton(.deleteRestaurant) {
+                        vm.showDeleteAlert()
+                    }
+                    Spacer()
+                }
+                .padding()
+                
             }
-            
         }
         .navigationTitle(vm.restaurant.name)
         .alert(vm.alertTitle, isPresented: $vm.showingDeleteAlert) {

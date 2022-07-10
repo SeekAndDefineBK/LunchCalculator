@@ -97,11 +97,11 @@ struct ReusableList<Content: View>: View {
                     gradient: Gradient(
                         colors: [
                             Color(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)),
-                            Color(#colorLiteral(red: 0.1294117719, green: 0.2156862766, blue: 0.06666667014, alpha: 1)),
+                            Color(#colorLiteral(red: 0.07516329736, green: 0.2165592611, blue: 0.1567329168, alpha: 1)),
                             Color(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)),
-                            Color(#colorLiteral(red: 0.1294117719, green: 0.2156862766, blue: 0.06666667014, alpha: 1)),
+                            Color(#colorLiteral(red: 0.07516329736, green: 0.2165592611, blue: 0.1567329168, alpha: 1)),
                             Color(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)),
-                            Color(#colorLiteral(red: 0.1294117719, green: 0.2156862766, blue: 0.06666667014, alpha: 1)),
+                            Color(#colorLiteral(red: 0.07516329736, green: 0.2165592611, blue: 0.1567329168, alpha: 1)),
                             Color(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))
                         ]),
                         center: .center
@@ -150,5 +150,162 @@ struct ReusableList<Content: View>: View {
             .listStyle(.plain)
         }
         
+    }
+}
+
+struct FoodContainerCell: View {
+    var food: FoodContainer
+    
+    var body: some View {
+        PreviewCell {
+            VStack(alignment: .leading) {
+                HStack {
+                    Text(food.displayName)
+                        .font(.title3)
+                        .bold()
+                        .italic()
+                    
+                    Spacer()
+                }
+            }
+        }
+    }
+}
+
+struct FoodCell: View {
+    var food: Food
+    
+    var body: some View {
+        PreviewCell {
+            VStack(alignment: .leading) {
+                HStack {
+                    Text(food.name)
+                        .font(.title3)
+                        .bold()
+                        .italic()
+                    
+                    Spacer()
+                    
+                    Text("$\(food.totalWithExtrasDue, specifier: "%.2f")")
+                        .bold()
+                }
+                
+                Text("Purchased by \(food.personName) at \(food.restaurantName)")
+            }
+        }
+    }
+}
+
+struct PersonCell: View {
+    var person: Person
+    
+    var body: some View {
+        PreviewCell {
+            VStack(alignment: .leading) {
+                HStack {
+                    Text(person.name)
+                        .font(.title3)
+                        .bold()
+                        .italic()
+                    
+                    Spacer()
+                    
+                    person.totalPaid
+                }
+                
+                Text("\(person.lastOrderDescription)")
+            }
+        }
+    }
+}
+
+struct ReceiptCell: View {
+    var receipt: Receipt
+    
+    var body: some View {
+        PreviewCell {
+            HStack {
+                VStack(alignment: .leading) {
+                    Text(receipt.restaurantName)
+                        .font(.title3)
+                        .bold()
+                        .italic()
+                    
+                        Text("on \(receipt.date.formatted(date: .numeric, time: .omitted))")
+                        
+                        HStack {
+                            Text("with: \(receipt.allNames)")
+
+                            Spacer()
+                        }
+                }
+                
+                Text("$\(receipt.total, specifier: "%.2f")")
+                    .bold()
+                    .italic()
+            }
+        }
+    }
+}
+
+struct SubreceiptCell: View {
+    var subreceipt: Subreceipt
+    
+    var body: some View {
+        PreviewCell {
+            VStack(alignment: .leading) {
+                HStack {
+                    Text(subreceipt.restaurantName)
+                        .font(.title3)
+                        .bold()
+                        .italic()
+                    
+                    Spacer()
+                }
+                
+                HStack {
+                    VStack(alignment: .leading) {
+                        Text("on \(subreceipt.date.formatted(date: .numeric, time: .omitted))")
+                        
+                        Text("Ordered:")
+                        
+                        VStack {
+                            ForEach(subreceipt.allFood) { food in
+                                Text(food.name)
+                            }
+                        }
+                        .padding(.leading, 20)
+                    }
+                    
+                    Spacer()
+                    
+                    Text("$\(subreceipt.totalWithExtrasDue, specifier: "%.2f")")
+                        .bold()
+                }
+                
+            }
+        }
+    }
+}
+
+struct RestaurantCell: View {
+    var restaurant: Restaurant
+    
+    var body: some View {
+        PreviewCell {
+            VStack(alignment: .leading) {
+                HStack {
+                    Text(restaurant.name)
+                        .font(.title3)
+                        .bold()
+                        .italic()
+                    
+                    Spacer()
+                }
+                
+                Text("Total Spent: $\(restaurant.totalSpent, specifier: "%.2f")")
+                
+            }
+        }
     }
 }

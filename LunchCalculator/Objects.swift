@@ -78,6 +78,58 @@ extension Receipt {
     }
 }
 
+extension Subreceipt {
+    var allFood: [Food] {
+        let arr = food?.allObjects as? [Food] ?? []
+        return arr.sorted(by: {$0.name < $1.name})
+    }
+    
+    var totalDue: Double {
+        return allFood.reduce(0) { $0 + $1.total}
+    }
+    
+    var personName: String {
+        person?.name ?? "Unknown Person"
+    }
+    
+
+    var restaurantName: String {
+        receipt?.restaurantName ?? "Unknown Restaurant"
+    }
+    
+    var date: Date {
+        return receipt?.date ?? Date()
+    }
+    
+    //TODO: Do you need this? Is it better on Food? Or do the calculations on Receipt make these unnecessary?
+    var totalWithExtrasDue: Double {
+        return totalDue + splitTaxAmount + splitTipAmount + splitFeesAmount
+    }
+    
+    var totalWithTaxOnly: Double {
+        return totalDue + splitTaxAmount
+    }
+
+    var billPercentage: Double {
+        let receiptTotal = receipt?.total ?? 0
+
+        return totalDue / receiptTotal
+    }
+
+    var splitTipAmount: Double {
+        return (receipt?.cd_tip ?? 0) * billPercentage
+    }
+
+    var splitFeesAmount: Double {
+        return (receipt?.cd_fees ?? 0) * billPercentage
+    }
+
+    var splitTaxAmount: Double {
+        return (receipt?.cd_tax ?? 0) * billPercentage
+    }
+}
+
+
 extension Person {
     var name: String {
         cd_name ?? "Unknown Name"
@@ -92,10 +144,23 @@ extension Person {
         return arr.sorted(by: {$0.name < $1.name})
     }
     
+    ///This is a Text object because returning a string is more complicated to reduce the doubleDue to 2 decimal places
     var totalPaid: Text {
-        let doubleDue = allSubreceipts.reduce(0){ $0 + $1.totalDue }
+        let doubleDue = allSubreceipts.reduce(0){ $0 + $1.totalWithExtrasDue }
         
-        return Text("Total Paid: \(doubleDue, specifier: "%.2f")")
+        return Text("Total Paid: $\(doubleDue, specifier: "%.2f")")
+    }
+    
+    var lastOrderDescription: String {
+        if allSubreceipts.isEmpty {
+           return "Never Ordered"
+        } else {
+            let sortedSubreceipts = allSubreceipts.sorted(by: {$0.date < $1.date})
+            let mostRecent = sortedSubreceipts[0]
+            let mostRecentDate = mostRecent.date.formatted(date: .numeric, time: .omitted)
+            let mostRecentRestaurant = mostRecent.restaurantName
+            return "Last ordered on \(mostRecentDate) from \(mostRecentRestaurant)"
+        }
     }
 }
 
@@ -124,12 +189,24 @@ extension Food {
         total + tax
     }
     
+    var totalWithExtrasDue: Double {
+        total + tax + tip + fees
+    }
+    
     private var subreceiptPercentage: Double {
         total / (subreceipt?.totalDue ?? 0)
     }
     
     var tax: Double {
         (subreceipt?.splitTaxAmount ?? 0) * subreceiptPercentage
+    }
+    
+    var tip: Double {
+        (subreceipt?.splitTipAmount ?? 0) * subreceiptPercentage
+    }
+    
+    var fees: Double {
+        (subreceipt?.splitFeesAmount ?? 0) * subreceiptPercentage
     }
     
     var date: Date {
@@ -162,53 +239,14 @@ struct FoodContainer: Identifiable {
         }
     }
     
+    var food: Food
+    
     init(_ food: Food) {
         self.rawName = food.rawName
+        self.food = food
     }
 }
 
-extension Subreceipt {
-    var allFood: [Food] {
-        let arr = food?.allObjects as? [Food] ?? []
-        return arr.sorted(by: {$0.name < $1.name})
-    }
-    
-    var totalDue: Double {
-        return allFood.reduce(0) { $0 + $1.total}
-    }
-    
-    var personName: String {
-        person?.name ?? "Unknown Person"
-    }
-    
-
-    var restaurantName: String {
-        receipt?.restaurantName ?? "Unknown Restaurant"
-    }
-    
-    //TODO: Do you need this? Is it better on Food? Or do the calculations on Receipt make these unnecessary?
-    var totalWithExtrasDue: Double {
-        return totalDue + splitTaxAmount + splitTipAmount + splitFeesAmount
-    }
-
-    var billPercentage: Double {
-        let receiptTotal = receipt?.total ?? 0
-
-        return totalDue / receiptTotal
-    }
-
-    var splitTipAmount: Double {
-        return (receipt?.cd_tip ?? 0) * billPercentage
-    }
-
-    var splitFeesAmount: Double {
-        return (receipt?.cd_fees ?? 0) * billPercentage
-    }
-
-    var splitTaxAmount: Double {
-        return (receipt?.cd_tax ?? 0) * billPercentage
-    }
-}
 
 extension Restaurant {
     var name: String {

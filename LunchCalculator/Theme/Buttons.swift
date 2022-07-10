@@ -19,7 +19,7 @@ struct ThemedButton: View {
             case .delete:
                 return NSLocalizedString("Delete", comment: "Confirming action to proceed with deleting an object.")
             case .removePerson:
-                return NSLocalizedString("Yes, Remove", comment: "Confirming action to remove a person from a receipt or Food.")
+                return NSLocalizedString("Remove", comment: "Action to remove a person from a receipt or Food.")
             case .okay:
                 return NSLocalizedString("Okay", comment: "No options given, proceed.")
             case .cancel:
@@ -76,14 +76,23 @@ struct ThemedButton: View {
     }
     
     var body: some View {
-        Button {
-            action()
-        } label: {
-            Label(type.displayText, systemImage: type.systemImage)
+        
+        if isDestructive() {
+            Button(role: .destructive) {
+                action()
+            } label: {
+                Label(type.displayText, systemImage: type.systemImage)
+            }
+            .foregroundColor(.red)
+
+        } else {
+            Button {
+                action()
+            } label: {
+                Label(type.displayText, systemImage: type.systemImage)
+            }
         }
-        .if(isDestructive()) { view in
-            view.foregroundColor(.red)
-        }
+    
     }
     
     func isDestructive() -> Bool {

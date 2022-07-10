@@ -21,8 +21,10 @@ struct AllRestaurantsView: View {
             ReusableList {
                 Group {
                     ForEach(vm.allRestaurants) { restaurant in
-                        NavigationLink("\(restaurant.name) Total Spent \(restaurant.totalSpent, specifier: "%.2f")") {
+                        NavigationLink {
                             SingleRestaurantView(dc: vm.dc, restaurant)
+                        } label: {
+                            RestaurantCell(restaurant: restaurant)
                         }
                     }
                     .onDelete { offsets in

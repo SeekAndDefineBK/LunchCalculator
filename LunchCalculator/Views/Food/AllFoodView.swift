@@ -24,11 +24,11 @@ struct AllFoodView: View {
             ReusableList {
                 Group {
                     ForEach(vm.allFoodContainers) { foodContainer in
-                        
-                        NavigationLink(foodContainer.displayName) {
+                        NavigationLink {
                             FoodContainerView(dc: vm.dc, predicateStr: foodContainer.rawName)
+                        } label: {
+                            FoodContainerCell(food: foodContainer)
                         }
-
                     }
                 }
             }
@@ -37,36 +37,3 @@ struct AllFoodView: View {
         }
     }
 }
-
-//MARK: Delete original when .onDelete Function is migrated to new view
-//struct AllFoodView: View {
-//    @StateObject var vm: AllFoodView_Model
-//    static let tag = "AllFood"
-//
-//    init(dc: DataController) {
-//        let viewModel = AllFoodView_Model(
-//            dc: dc
-//        )
-//
-//        _vm = StateObject(wrappedValue: viewModel)
-//    }
-//
-//    var body: some View {
-//        NavigationView {
-//            List {
-//                ForEach(vm.allRestaurants) { restaurant in
-//                    Section(header: Text(restaurant.name)) {
-//                        ForEach(restaurant.allFood) { food in
-//                            Text(food.name)
-//                        }
-//                        .onDelete { offsets in
-//                            vm.delete(from: restaurant, offsets)
-//                        }
-//                    }
-//                }
-//
-//            }
-//            .navigationTitle("All Food")
-//        }
-//    }
-//}

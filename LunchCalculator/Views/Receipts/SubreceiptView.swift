@@ -28,6 +28,23 @@ struct SubreceiptView: View {
         self.askToRemoveAction = askToRemove
     }
     
+    /// Initializer for when the view will not be displayed along side other items on the receipt
+    /// - Parameters:
+    ///   - dc: DataController object
+    ///   - subreceipt: The subreceipt which will provide totalDue, tax, tip, and fee values.
+    ///   - askToRemove: The action to perform when the user taps remove inside SubreceiptView.
+    init(dc: DataController, subreceipt: Subreceipt, askToRemove: @escaping () -> Void) {
+        self.dc = dc
+        _subreceipt = ObservedObject(wrappedValue: subreceipt)
+        
+        self.totalDue = subreceipt.totalDue
+        self.tax = subreceipt.splitTaxAmount
+        self.tip = subreceipt.splitTipAmount
+        self.fees = subreceipt.splitFeesAmount
+        
+        self.askToRemoveAction = askToRemove
+    }
+    
     var body: some View {
         Section {
             VStack(alignment: .trailing) {
@@ -36,7 +53,7 @@ struct SubreceiptView: View {
                         .font(.title)
                         .bold()
                     Spacer()
-                    Text("Total Due: \(totalDue, specifier: "%.2f")")
+                    Text("Total Due: \(subreceipt.totalWithExtrasDue, specifier: "%.2f")")
                         .bold()
                 }
             }

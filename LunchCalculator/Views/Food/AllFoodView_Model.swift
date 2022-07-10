@@ -75,20 +75,5 @@ extension AllFoodView {
                 }
             }
         }
-        
-        func delete(from restaurant: Restaurant, _ offsets: IndexSet) {
-            for offset in offsets {
-                let food = restaurant.allFood[offset]
-                food.objectWillChange.send()
-                dc.delete(food)
-            }
-        }
-        
-        func delete(_ offsets: IndexSet) {
-            for offset in offsets {
-                let food = allFood[offset]
-                dc.delete(food)
-            }
-        }
     }
 }

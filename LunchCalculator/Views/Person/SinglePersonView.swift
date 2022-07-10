@@ -12,28 +12,39 @@ struct SinglePersonView: View {
     @ObservedObject var person: Person
     
     var body: some View {
-        List {
-            person.totalPaid
-                .bold()
-                .font(.title)
-            
-            Section(header: Text("All Food")) {
-                ForEach(person.allFood) { food in
-                    
-                    NavigationLink {
-                        SingleFoodView(dc, food: food)
-                    } label: {
-                        VStack(alignment: .leading) {
-                            Text(foodLabel(food))
-                            Text("Price: $\(food.total, specifier: "%.2f")")
+        ReusableList {
+            Group {
+                person.totalPaid
+                    .bold()
+                    .font(.title)
+                
+                Section(header: Text("All Food")) {
+                    ForEach(person.allFood) { food in
+                        
+                        NavigationLink {
+                            SingleFoodView(dc, food: food)
+                        } label: {
+                            FoodCell(food: food)
                         }
                     }
                 }
-            }
-            
-            Section(header: Text("All Restaurants")) {
-                ForEach(person.allSubreceipts) { subreceipt in
-                    Text(subreceipt.restaurantName)
+                
+                Section(header: Text("All Subreceipts")) {
+                    ForEach(person.allSubreceipts) { subreceipt in
+                        NavigationLink {
+                            Form {
+                                SubreceiptView(dc: dc, subreceipt: subreceipt) {
+                                    //
+                                }
+                            }
+                            .navigationTitle(Text("\(subreceipt.restaurantName)"))
+                            
+                        } label: {
+                            SubreceiptCell(subreceipt: subreceipt)
+                        }
+
+                        
+                    }
                 }
             }
         }

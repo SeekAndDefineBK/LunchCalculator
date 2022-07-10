@@ -24,10 +24,11 @@ struct AllPeopleView: View {
             ReusableList {
                 Group {
                     ForEach(vm.allPeople) { person in
-                        NavigationLink(person.name) {
+                        NavigationLink {
                             SinglePersonView(dc: vm.dc, person: person)
+                        } label: {
+                            PersonCell(person: person)
                         }
-
                     }
                     .onDelete { offsets in
                         vm.delete(offsets)

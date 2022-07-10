@@ -24,7 +24,7 @@ struct SingleFoodView: View {
     var body: some View {
         List {
             Text("\(food.restaurantName) on \(food.date.formatted(date: .numeric, time: .omitted))")
-            Text("Purchased by: \(food.person?.name ?? "Unknown")")
+            Text("Purchased by: \(food.personName)")
             Text("Subtotal: $\(food.cd_subtotal, specifier: "%.2f")")
             Text("Tax: \(food.tax, specifier: "%.2f")")
             Text("Total: $\(food.totalWithTax, specifier: "%.2f")")
