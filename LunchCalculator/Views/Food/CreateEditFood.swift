@@ -47,6 +47,12 @@ struct CreateEditFood: View {
                     vm.delete(offsets)
                 }
                 
+                ThemedButton(.addFood) {
+                    vm.addNewFood()
+                }
+            }
+            
+            Section {
                 ThemedButton(.saveFood) {
                     dismiss()
                 }
