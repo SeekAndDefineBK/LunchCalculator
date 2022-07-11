@@ -49,7 +49,7 @@ struct SubreceiptView: View {
         Section {
             VStack(alignment: .trailing) {
                 HStack {
-                    Text(subreceipt.person!.name)
+                    Text(subreceipt.person?.name ?? "Unknown Person")
                         .font(.title)
                         .bold()
                     Spacer()
@@ -92,7 +92,10 @@ struct SubreceiptView: View {
 
             
             NavigationLink {
-                CreateEditFood(dc: dc, person: subreceipt.person!, food: subreceipt.allFood, subreceipt: subreceipt)
+                if let person = subreceipt.person {
+                    CreateEditFood(dc: dc, person: person, food: subreceipt.allFood, subreceipt: subreceipt)
+                }
+                
             } label: {
                 Label("Add Food", systemImage: "plus.circle")
             }
